@@ -39,5 +39,20 @@
         <!-- <div class="symbol">&#x2683;&#x2681;</div> -->
         <div class="message">"The secrets of eternity await you."</div>
     </div>
+
+
+<!--Watson Chatbot -->    
+<script src="https://web-chat.global.assistant.watson.appdomain.cloud/loadWatsonAssistantChat.js"></script>
+<script>;
+    const options = {
+        // A UUID like '1d7e34d5-3952-4b86-90eb-7c7232b9b540' included in the embed code provided in Watson Assistant.
+        integrationID: '3b5d7f12-2417-49e3-8e82-50cec6152bfa',
+        // Your assistants region e.g. 'us-south', 'us-east', 'jp-tok' 'au-syd', 'eu-gb', 'eu-de', etc
+        region: 'us-south'
+    };
+    window.loadWatsonAssistantChat(options).then(function (instance) {
+        instance.render();
+    });</script>
+    
 </body>
 </html>
