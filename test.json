@@ -17,6 +17,66 @@
       "name": "Item 3",
       "description": "This is the description for Item 3.",
       "price": 39.99
+    },
+    {
+      "id": 4,
+      "name": "Item 4",
+      "description": "This is the description for Item 4.",
+      "price": 49.99
+    },
+    {
+      "id": 5,
+      "name": "Item 5",
+      "description": "This is the description for Item 5.",
+      "price": 59.99
+    },
+    {
+      "id": 6,
+      "name": "Item 6",
+      "description": "This is the description for Item 6.",
+      "price": 69.99
+    },
+    {
+      "id": 7,
+      "name": "Item 7",
+      "description": "This is the description for Item 7.",
+      "price": 79.99
+    },
+    {
+      "id": 8,
+      "name": "Item 8",
+      "description": "This is the description for Item 8.",
+      "price": 89.99
+    },
+    {
+      "id": 9,
+      "name": "Item 9",
+      "description": "This is the description for Item 9.",
+      "price": 99.99
+    },
+    {
+      "id": 10,
+      "name": "Item 10",
+      "description": "This is the description for Item 10.",
+      "price": 109.99
+    },
+    {
+      "id": 11,
+      "name": "Item 11",
+      "description": "This is the description for Item 11.",
+      "price": 119.99
+    },
+    {
+      "id": 12,
+      "name": "Item 12",
+      "description": "This is the description for Item 12.",
+      "price": 129.99
+    },
+    {
+      "id": 13,
+      "name": "Item 13",
+      "description": "This is the description for Item 13.",
+      "price": 139.99
     }
   ]
 }
