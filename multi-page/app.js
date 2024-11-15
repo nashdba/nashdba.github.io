@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handle redirect on Home page
-    if (currentPage === '/index.html' && appID.isLoggedIn()) {
+    if (currentPage === '/index.html' && appID.isAuthenticated()) {
         document.getElementById('profile-btn').addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
