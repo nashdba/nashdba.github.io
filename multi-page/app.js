@@ -1,6 +1,6 @@
 // Initialize IBM AppID
 const appID = new AppID({
-    clientId: '0a08efad-7177-4907-a2d2-3aa90b4e5af', // Your IBM App ID client ID
+    clientId: '0a08efad-7177-4907-a2d2-3aa90b4e5af2', // Your IBM App ID client ID
     discoveryEndpoint: 'https://eu-gb.appid.cloud.ibm.com/oauth/v4/2e834006-5b8a-4c84-937b-7a7d6a14ccbf/.well-known/openid-configuration', // Your App ID discovery URL
     redirectUri: window.location.href
 });
