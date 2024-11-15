@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
 
     // If user is not authenticated, redirect to login page
-    if (currentPage !== '/login.html' && !appID.isAuthenticated()) {
+    if (currentPage !== '/login.html' && !appID.isLoggedIn()) {
         window.location.href = 'login.html';
     }
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle profile page and display user info
     if (currentPage === '/profile.html') {
-        if (appID.isAuthenticated()) {
+        if (appID.isLoggedIn()) {
             appID.getUserInfo()
                 .then((user) => {
                     document.getElementById('user-name').textContent = user.name;
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handle redirect on Home page
-    if (currentPage === '/index.html' && appID.isAuthenticated()) {
+    if (currentPage === '/index.html' && appID.isLoggedIn()) {
         document.getElementById('profile-btn').addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
