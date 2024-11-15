@@ -33,7 +33,7 @@
 			} catch (e) {
 				showError(e);
 			}
-		//});
+		});
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check user authentication
@@ -90,5 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'profile.html';
         });
     }
-});
+//});
 
