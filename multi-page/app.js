@@ -8,7 +8,7 @@ const appID = new AppID();
     } catch (e) {
 			console.error(e);
 			document.getElementById('error').textContent = e;
-			return;
+			
 		}
 
 
