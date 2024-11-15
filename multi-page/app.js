@@ -33,7 +33,7 @@
 			} catch (e) {
 				showError(e);
 			}
-		});
+		//});
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check user authentication
