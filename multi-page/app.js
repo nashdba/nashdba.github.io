@@ -1,16 +1,39 @@
-const appID = new AppID();
-
-	try {
-		appID.init({
+(async function () {
+		const appID = new AppID();
+		let tokens;
+		try {
+			await appID.init({
                 clientId: '0a08efad-7177-4907-a2d2-3aa90b4e5af2',
                 discoveryEndpoint: 'https://eu-gb.appid.cloud.ibm.com/oauth/v4/2e834006-5b8a-4c84-937b-7a7d6a14ccbf/.well-known/openid-configuration'
 			});
-    } catch (e) {
+		} catch (e) {
 			console.error(e);
 			document.getElementById('error').textContent = e;
-			
+			return;
 		}
+		try {
+			tokens = await appID.silentSignin();
+			if (tokens) {
+				document.getElementById('loader').setAttribute('class', 'hidden');
+				document.getElementById('login').setAttribute('class', 'hidden');
+				success(tokens.idTokenPayload);
+			}
+		} catch (e) {
+			document.getElementById('loader').setAttribute('class', 'hidden');
+			showError(e);
+		}
+		document.getElementById('login').addEventListener('click', async () => {
+			document.getElementById('login').setAttribute('class', 'hidden');
+			document.getElementById('error').textContent = '';
 
+			try {
+				tokens = await appID.signin();
+				let userInfo = await appID.getUserInfo(tokens.accessToken);
+				success(tokens.idTokenPayload);
+			} catch (e) {
+				showError(e);
+			}
+		});
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check user authentication
