@@ -61,7 +61,7 @@ if (currentPage !== '/multi-page/login.html' && !appID.isAuthenticated()) {
 }
 		
 // Handle redirect on Home page currentPage === '/multi-page/index.html' && appID.isLoggedIn()
-    if (TRUE) {
+    if (currentPage) {
             console.error('Entering index.html logic:');
 	    console.error('Current Page2:',currentPage);
 	    //console.error('Window Locator Ref: ', window.location.href);
