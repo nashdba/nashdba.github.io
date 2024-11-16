@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname;
 
     // If user is not authenticated, redirect to login page
-    if (currentPage !== '/login.html' && !appID.isAuthenticated()) {
+    if (currentPage !== '/multi-page/login.html' && !appID.isAuthenticated()) {
         window.location.href = 'login.html';
     }
 
