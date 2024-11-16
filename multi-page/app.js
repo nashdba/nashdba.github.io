@@ -53,12 +53,12 @@
 		});
 
 	
-// Handle redirect on Home page
-    if (currentPage === '/multi-page/index.html' && appID.isLoggedIn()) {
+// Handle redirect on Home page  && appID.isLoggedIn()
+    if (currentPage === '/multi-page/index.html' ) {
             console.error('Entering fwd to profile logic:');
 	    console.error('Current Page: ', currentPage);
 	    console.error('Window Locator Ref: ', window.location.href);
-            window.location.href = 'profile.html';	    
+            window.location.href = 'https://nashdba.github.io/multi-page/profile.html';	    
         
     }
 
