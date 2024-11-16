@@ -13,7 +13,7 @@
 	(async function () {
 
 		const currentPage = window.location.pathname;
-		console.error('Current Page: ', e);
+		console.error('Current Page: ', currentPage);
 		
 		const appID = new AppID();
 		let tokens;
