@@ -35,7 +35,7 @@
 			showError(e);
 		}
 		document.getElementById('login-btn').addEventListener('click', async () => {
-			document.getElementById('login').setAttribute('class', 'hidden');
+			document.getElementById('login-btn').setAttribute('class', 'hidden');
 			document.getElementById('error').textContent = '';
 
 			try {
