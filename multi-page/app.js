@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handle profile page and display user info
-    if (currentPage === '/profile.html') {
+    if (currentPage === '/multi-page/profile.html') {
         if (appID.isAuthenticated()) {
             appID.getUserInfo()
                 .then((user) => {
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handle redirect on Home page
-    if (currentPage === '/index.html' && appID.isAuthenticated()) {
+    if (currentPage === '/multi-page/index.html' && appID.isAuthenticated()) {
         document.getElementById('profile-btn').addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
