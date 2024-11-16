@@ -1,34 +1,50 @@
-// Initialize App ID with your client ID and discovery endpoint
-const appID = new AppID({
-	
+
+
+	function showError(e) {
+		console.error(e);
+		document.getElementById('error').textContent = e;
+		document.getElementById('login-btn').setAttribute('class', 'button');
+	}
+
+	function success(decodeIDToken) {
+		document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
+	}
+
+	(async function () {
+		const appID = new AppID();
+		let tokens;
+		try {
+			await appID.init({
                 clientId: '0a08efad-7177-4907-a2d2-3aa90b4e5af2',
                 discoveryEndpoint: 'https://eu-gb.appid.cloud.ibm.com/oauth/v4/2e834006-5b8a-4c84-937b-7a7d6a14ccbf/.well-known/openid-configuration'
-    });
+			});
+		} catch (e) {
+			console.error(e);
+			document.getElementById('error').textContent = e;
+			return;
+		}
+		try {
+			tokens = await appID.silentSignin();
+			if (tokens) {
+				document.getElementById('loader').setAttribute('class', 'hidden');
+				document.getElementById('login-btn').setAttribute('class', 'hidden');
+				success(tokens.idTokenPayload);
+			}
+		} catch (e) {
+			document.getElementById('loader').setAttribute('class', 'hidden');
+			showError(e);
+		}
+		document.getElementById('login-btn').addEventListener('click', async () => {
+			document.getElementById('login').setAttribute('class', 'hidden');
+			document.getElementById('error').textContent = '';
 
-// Handle login button click
-document.getElementById('login-btn').addEventListener('click', async () => {
-    try {
-        const tokens = await appID.signin();
-        if (tokens) {
-            window.location.href = 'index.html';
-        }
-    } catch (e) {
-        console.error('Login failed: ', e);
-    }
-});
+			try {
+				tokens = await appID.signin();
+				let userInfo = await appID.getUserInfo(tokens.accessToken);
+				success(tokens.idTokenPayload);
+			} catch (e) {
+				showError(e);
+			}
+		});
 
-// Handle user info display
-if (appID.isLoggedIn()) {
-    appID.getUserInfo()
-        .then((user) => {
-            document.getElementById('user-name').textContent = user.name;
-            document.getElementById('user-email').textContent = user.email;
-        })
-        .catch((err) => {
-            console.error('Failed to get user info: ', err);
-        });
-}
-
-
-
-
+	})()
