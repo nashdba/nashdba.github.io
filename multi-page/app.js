@@ -52,14 +52,20 @@
 			}
 		});
 
-	
+
+
+// If user is not authenticated, redirect to login page
+if (currentPage !== '/login.html' && !appID.isAuthenticated()) {
+    window.location.href = 'login.html';
+}
+		
 // Handle redirect on Home page  && appID.isLoggedIn()
-    if (currentPage === '/multi-page/index.html' ) {
-            console.error('Entering fwd to profile logic:');
+    if (currentPage == '/multi-page/index.html' && appID.isLoggedIn()) {
+            console.error('Entering index.html logic:');
 	    console.error('Current Page: ', currentPage);
-	    console.error('Window Locator Ref: ', window.location.href);
-            window.location.href = 'https://nashdba.github.io/multi-page/profile.html';	   
-	    window.location.replace('https://nashdba.github.io/multi-page/profile.html');
+	    //console.error('Window Locator Ref: ', window.location.href);
+            //window.location.href = 'https://nashdba.github.io/multi-page/profile.html';	   
+	    //window.location.replace('https://nashdba.github.io/multi-page/profile.html');
         
     }
 
