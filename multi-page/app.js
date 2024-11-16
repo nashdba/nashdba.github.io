@@ -47,4 +47,14 @@
 			}
 		});
 
-	})()
+	
+// Handle redirect on Home page
+    if (currentPage === '/index.html' && appID.isLoggedIn()) {
+        document.getElementById('profile-btn').addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+    }
+
+
+//end async
+})()
