@@ -53,7 +53,7 @@
 
 	
 // Handle redirect on Home page
-    if (currentPage === 'multi-page/index.html' && appID.isLoggedIn()) {
+    if (currentPage === '/multi-page/index.html' && appID.isLoggedIn()) {
         document.getElementById('profile-btn').addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
