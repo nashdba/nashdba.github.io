@@ -60,8 +60,8 @@ if (currentPage !== '/multi-page/login.html' && !appID.isAuthenticated()) {
     window.location.href = 'login.html';
 }
 		
-// Handle redirect on Home page  && appID.isLoggedIn()
-    if (currentPage === '/multi-page/index.html') {
+// Handle redirect on Home page currentPage === '/multi-page/index.html' && appID.isLoggedIn()
+    if (TRUE) {
             console.error('Entering index.html logic:');
 	    console.error('Current Page2:',currentPage);
 	    //console.error('Window Locator Ref: ', window.location.href);
