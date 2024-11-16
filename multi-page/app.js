@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle profile page and display user info
     if (currentPage === '/profile.html') {
-        if (appID.isLoggedIn()) {
+        if (appID.isAuthenticated()) {
             appID.getUserInfo()
                 .then((user) => {
                     document.getElementById('user-name').textContent = user.name;
