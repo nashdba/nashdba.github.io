@@ -14,7 +14,7 @@
 
 		const currentPage = window.location.pathname;
 		console.error('Window Locator Ref: ', window.location.href);
-		console.error('Current Page: ', currentPage);
+		console.error('Current Page:',currentPage);
 		
 		const appID = new AppID();
 		let tokens;
@@ -63,7 +63,7 @@ if (currentPage !== '/multi-page/login.html' && !appID.isAuthenticated()) {
 // Handle redirect on Home page  && appID.isLoggedIn()
     if (currentPage == '/multi-page/index.html' && appID.isLoggedIn()) {
             console.error('Entering index.html logic:');
-	    console.error('Current Page: ', currentPage);
+	    console.error('Current Page2:',currentPage);
 	    //console.error('Window Locator Ref: ', window.location.href);
             //window.location.href = 'https://nashdba.github.io/multi-page/profile.html';	   
 	    //window.location.replace('https://nashdba.github.io/multi-page/profile.html');
