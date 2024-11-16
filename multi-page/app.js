@@ -11,6 +11,10 @@
 	}
 
 	(async function () {
+
+		const currentPage = window.location.pathname;
+		console.error('Current Page: ', e);
+		
 		const appID = new AppID();
 		let tokens;
 		try {
