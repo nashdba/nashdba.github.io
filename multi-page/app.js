@@ -7,7 +7,7 @@
 	}
 
 	function success(decodeIDToken) {
-		document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
+		document.getElementById('welcome').textContent = 'Hello, ';
 	}
 
 	(async function () {
