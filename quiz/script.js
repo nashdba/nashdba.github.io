@@ -1,4 +1,4 @@
-let quizData = {}; // Store quiz data
+let quizData = []; // Store quiz data (an array of quiz objects)
 let currentQuiz = ''; // Track which quiz is currently selected
 let currentQuestionIndex = 0; // Track current question index
 
@@ -14,6 +14,7 @@ function loadQuizzes() {
         .then(response => response.json())
         .then(data => {
             quizData = data; // Store quiz data
+            console.log("Quiz data loaded:", quizData); // Debugging line to check quiz data
             renderQuizTiles();
         })
         .catch(error => console.error("Error loading quiz data:", error));
@@ -22,54 +23,58 @@ function loadQuizzes() {
 // Render quiz tiles dynamically
 function renderQuizTiles() {
     const mainContent = document.getElementById("mainContent");
-    const tileTemplate = `
-        <div class="tile" onclick="startQuiz('generalKnowledge')">General Knowledge</div>
-        <div class="tile" onclick="startQuiz('science')">Science</div>
-        <div class="tile" onclick="startQuiz('math')">Math Quiz</div>
-    `;
+    const tileTemplate = quizData.map(quiz => {
+        return `<div class="tile" onclick="startQuiz('${quiz.name}')">${quiz.name}</div>`;
+    }).join('');
+    
     mainContent.innerHTML = tileTemplate; // Insert tiles into mainContent
 }
 
 // Start the selected quiz
-function startQuiz(quizType) {
-    currentQuiz = quizType;
-    currentQuestionIndex = 0;
+function startQuiz(quizName) {
+    currentQuiz = quizName;
+    currentQuestionIndex = 0; // Reset question index
 
-    // Check if the selected quiz has questions
-    if (!quizData[currentQuiz] || quizData[currentQuiz].length === 0) {
+    // Find the quiz data based on the quiz name
+    const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
+
+    // If the selected quiz doesn't exist, show an error
+    if (!selectedQuiz || !selectedQuiz.questions || selectedQuiz.questions.length === 0) {
         alert("No questions available for this quiz.");
         return;
     }
+
+    // Log the selected quiz to ensure the correct one is chosen
+    console.log(`Starting quiz: ${currentQuiz}`);
+    console.log("Questions:", selectedQuiz.questions);
 
     // Hide the quiz tiles and show the quiz container
     document.getElementById('mainContent').classList.add('hidden');
     document.getElementById('quizContainer').classList.remove('hidden');
     
     // Start showing questions
-    showNextQuestion();
+    showNextQuestion(selectedQuiz.questions);
 }
 
 // Show the next question
-function showNextQuestion() {
-    const quizQuestions = quizData[currentQuiz];
-    
+function showNextQuestion(questions) {
     // Check if we've reached the end of the quiz
-    if (!quizQuestions || currentQuestionIndex >= quizQuestions.length) {
+    if (currentQuestionIndex >= questions.length) {
         showQuizOverMessage();
         return;
     }
 
-    const question = quizQuestions[currentQuestionIndex];
+    const question = questions[currentQuestionIndex]; // Get the current question
     const questionArea = document.getElementById("questionArea");
     questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>`;
 
-    // Display the answer after a short delay
+    // Display the answer after a short delay (3 seconds)
     setTimeout(() => {
         questionArea.innerHTML += `<div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
-        currentQuestionIndex++;
-
-        // Move to the next question after a delay
-        setTimeout(showNextQuestion, 3000); // Show next question after 3 seconds
+        
+        // Move to the next question after a short delay
+        currentQuestionIndex++; // Increment the question index
+        setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 3000); // Show answer after 3 seconds
 }
 
@@ -90,6 +95,6 @@ function resetApp() {
     document.getElementById('mainContent').classList.remove('hidden');
     document.getElementById('quizContainer').classList.add('hidden');
     currentQuiz = '';
-    currentQuestionIndex = 0;
+    currentQuestionIndex = 0; // Reset question index to 0
 }
 
