@@ -2,6 +2,8 @@ let quizData = []; // Store quiz data (an array of quiz objects)
 let currentQuiz = ''; // Track which quiz is currently selected
 let currentQuestionIndex = 0; // Track current question index
 let isQuizInProgress = false; // Flag to track if a quiz is in progress
+let questionTimeout; // Store the timeout ID to clear it when ending the quiz
+let answerTimeout; // Store the timeout ID for showing the answer
 
 // Load quiz data when the page loads
 window.onload = () => {
@@ -81,12 +83,12 @@ function showNextQuestion(questions) {
     questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>`;
 
     // Display the answer after a short delay (3 seconds)
-    setTimeout(() => {
+    answerTimeout = setTimeout(() => {
         questionArea.innerHTML += `<div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
         
         // Move to the next question after a short delay
         currentQuestionIndex++; // Increment the question index
-        setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
+        questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 3000); // Show answer after 3 seconds
 }
 
@@ -122,6 +124,10 @@ function endQuiz() {
     // Stop the current quiz and reset the state
     showQuizOverMessage(); // Show the "Quiz Over" message
     isQuizInProgress = false; // Reset the flag to allow starting a new quiz
+
+    // Clear any timeouts to stop question progression
+    clearTimeout(questionTimeout);
+    clearTimeout(answerTimeout);
 
     // Remove the "End Quiz" button
     const endButton = document.getElementById('endQuizBtn');
