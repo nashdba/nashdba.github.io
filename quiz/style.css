@@ -60,6 +60,8 @@ nav ul li a {
 #quizContainer {
     margin-top: 20px;
     text-align: center;
+    justify-content: center;
+    
 }
 
 .hidden {
