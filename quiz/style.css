@@ -79,6 +79,8 @@ nav ul li a {
     border: none;
     cursor: pointer;
     border-radius: 10px;
+    max-width: 200px; /* Limit width on small screens */
+    position: relative;
     display: none; /* Hidden by default, shown when quiz starts */
 }
 
@@ -93,4 +95,20 @@ nav ul li a {
 /* Style for the question and answer display */
 .question, .answer {
     margin-bottom: 30px; /* Ensure there is enough space for the button */
+}
+
+/* Make sure the layout looks good on smaller screens */
+@media (max-width: 600px) {
+    #questionArea {
+        font-size: 20px;
+    }
+
+    #answerArea {
+        font-size: 18px;
+    }
+
+    #endQuizBtn {
+        width: 100%;
+        font-size: 14px;
+    }
 }
