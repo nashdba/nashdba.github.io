@@ -1,80 +1,81 @@
-let currentQuiz = '';
-let currentQuestionIndex = 0;
-let quizData = {};
+let quizData = {}; // Store quiz data
+let currentQuiz = ''; // Track which quiz is currently selected
+let currentQuestionIndex = 0; // Track current question index
 
-// Fetch quizzes from the JSON file when the page loads
-window.onload = loadQuizzes;
+// Load quiz data when the page loads
+window.onload = () => {
+    loadQuizzes();
+    document.getElementById('homeBtn').addEventListener('click', resetApp);
+};
 
+// Load quiz data from quizzes.json
 function loadQuizzes() {
     fetch('quizzes.json')
         .then(response => response.json())
         .then(data => {
-            quizData = data;  // Store quiz data in global variable
+            quizData = data; // Store quiz data
+            renderQuizTiles();
         })
-        .catch(error => {
-            console.error("Error loading quiz data:", error);
-        });
+        .catch(error => console.error("Error loading quiz data:", error));
 }
 
-function loadQuiz(quizType) {
-    // Check if the quiz data is loaded
-    if (!quizData || !quizData[quizType]) {
-        alert("Quiz data not found or not loaded yet!");
-        return;
-    }
+// Render quiz tiles dynamically
+function renderQuizTiles() {
+    const mainContent = document.getElementById("mainContent");
+    const tileTemplate = `
+        <div class="tile" onclick="startQuiz('generalKnowledge')">General Knowledge</div>
+        <div class="tile" onclick="startQuiz('science')">Science</div>
+        <div class="tile" onclick="startQuiz('math')">Math Quiz</div>
+    `;
+    mainContent.innerHTML = tileTemplate; // Insert tiles into mainContent
+}
 
-    // Set the current quiz and reset the question index
+// Start the selected quiz
+function startQuiz(quizType) {
     currentQuiz = quizType;
     currentQuestionIndex = 0;
 
-    // Clear previous quiz content
-    const quizContainer = document.getElementById("quizContainer");
-    quizContainer.innerHTML = "";
-
-    // Show the quiz container
-    quizContainer.classList.remove("hidden");
-
+    // Hide the quiz tiles and show the quiz container
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('quizContainer').classList.remove('hidden');
+    
     // Start showing questions
     showNextQuestion();
 }
 
+// Show the next question
 function showNextQuestion() {
     const quizQuestions = quizData[currentQuiz];
     if (!quizQuestions || currentQuestionIndex >= quizQuestions.length) {
-        document.getElementById("quizContainer").innerHTML = "<h2>Quiz Over! Well Done!</h2>";
+        showQuizOverMessage();
         return;
     }
 
-    // Get the current question and answer
-    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const question = quizQuestions[currentQuestionIndex];
+    const questionArea = document.getElementById("questionArea");
+    questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>`;
 
-    // Display the question
-    const quizContainer = document.getElementById("quizContainer");
-    const questionElement = document.createElement("div");
-    questionElement.classList.add("question");
-    questionElement.innerHTML = `<strong>Q${currentQuestionIndex + 1}:</strong> ${currentQuestion.question}`;
-    quizContainer.appendChild(questionElement);
-
-    // Display the answer after a delay (e.g., 3 seconds)
+    // Display the answer after a short delay
     setTimeout(() => {
-        const answerElement = document.createElement("div");
-        answerElement.classList.add("answer");
-        answerElement.innerHTML = `<strong>Answer:</strong> ${currentQuestion.answer}`;
-        quizContainer.appendChild(answerElement);
-
-        // Move to the next question after displaying the answer
+        questionArea.innerHTML += `<div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
         currentQuestionIndex++;
-        setTimeout(() => {
-            quizContainer.innerHTML = '';  // Clear the previous question and answer
-            showNextQuestion();  // Show the next question
-        }, 3000);  // Delay for 3 seconds before showing next question
-    }, 3000);  // Delay to show the answer
+
+        // Move to the next question after a delay
+        setTimeout(showNextQuestion, 3000);
+    }, 3000);
 }
 
-document.getElementById("homeBtn").addEventListener("click", () => {
-    // Hide quiz container and reset quiz state
-    document.getElementById("quizContainer").classList.add("hidden");
+// Show a message when the quiz is over
+function showQuizOverMessage() {
+    const questionArea = document.getElementById("questionArea");
+    questionArea.innerHTML = "<h2>Quiz Over! Well Done!</h2>";
+}
+
+// Reset the app to the main screen
+function resetApp() {
+    document.getElementById('mainContent').classList.remove('hidden');
+    document.getElementById('quizContainer').classList.add('hidden');
     currentQuiz = '';
-    currentQuestionIndex = 0;  // Reset the question index
-});
+    currentQuestionIndex = 0;
+}
 
