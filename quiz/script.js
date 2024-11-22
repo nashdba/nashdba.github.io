@@ -71,7 +71,7 @@ function showNextQuestion() {
     }, 3000);  // Delay to show the answer
 }
 
-document.getElementById("home").addEventListener("click", () => {
+document.getElementById("homeBtn").addEventListener("click", () => {
     // Hide quiz container and reset quiz state
     document.getElementById("quizContainer").classList.add("hidden");
     currentQuiz = '';
