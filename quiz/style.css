@@ -39,14 +39,16 @@ nav ul li a {
     width: 150px;
     height: 150px;
     margin: 10px;
-    background-color: #007BFF;
-    color: white;
+    background-color: #f5f5dc; /* Cream color */
+    color: #333; /* Dark text for contrast */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
     cursor: pointer;
     transition: transform 0.3s;
+    border-radius: 50%; /* Makes the tiles round */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
 }
 
 .tile:hover {
