@@ -107,17 +107,20 @@ function showQuizOverMessage() {
 
 // Show "End Quiz" button
 function showEndQuizButton() {
-    const endButton = document.createElement('button');
-    endButton.textContent = "End Quiz";
-    endButton.id = 'endQuizBtn';
-    endButton.onclick = endQuiz;
-    document.getElementById("quizContainer").appendChild(endButton);
+    // Check if the button already exists to avoid creating multiple buttons
+    if (!document.getElementById('endQuizBtn')) {
+        const endButton = document.createElement('button');
+        endButton.textContent = "End Quiz";
+        endButton.id = 'endQuizBtn';
+        endButton.onclick = endQuiz;
+        document.getElementById("quizContainer").appendChild(endButton);
+    }
 }
 
 // Handle the "End Quiz" button click
 function endQuiz() {
     // Stop the current quiz and reset the state
-    showQuizOverMessage();
+    showQuizOverMessage(); // Show the "Quiz Over" message
     isQuizInProgress = false; // Reset the flag to allow starting a new quiz
 
     // Remove the "End Quiz" button
@@ -134,5 +137,8 @@ function resetApp() {
     currentQuiz = '';
     currentQuestionIndex = 0; // Reset question index to 0
     isQuizInProgress = false; // Reset the flag to allow starting a new quiz
+
+    // Optionally, you can reset the question display area (in case a previous quiz is still open)
+    document.getElementById("questionArea").innerHTML = '';
 }
 
