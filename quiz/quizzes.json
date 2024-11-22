@@ -1,0 +1,19 @@
+[
+    {
+        "name": "General Knowledge",
+        "questions": [
+            { "question": "What is the capital of France?", "answer": "Paris" },
+            { "question": "Who wrote 'Hamlet'?", "answer": "William Shakespeare" },
+            { "question": "What is 5 + 7?", "answer": "12" }
+        ]
+    },
+    {
+        "name": "Science",
+        "questions": [
+            { "question": "What is the chemical symbol for water?", "answer": "H2O" },
+            { "question": "Who developed the theory of relativity?", "answer": "Albert Einstein" },
+            { "question": "What planet is known as the Red Planet?", "answer": "Mars" }
+        ]
+    }
+]
+
