@@ -1,6 +1,7 @@
 let quizData = []; // Store quiz data (an array of quiz objects)
 let currentQuiz = ''; // Track which quiz is currently selected
 let currentQuestionIndex = 0; // Track current question index
+let isQuizInProgress = false; // Flag to track if a quiz is in progress
 
 // Load quiz data when the page loads
 window.onload = () => {
@@ -32,6 +33,13 @@ function renderQuizTiles() {
 
 // Start the selected quiz
 function startQuiz(quizName) {
+    // Prevent starting a new quiz if one is already in progress
+    if (isQuizInProgress) {
+        alert("You are already taking a quiz. Please finish it first.");
+        return;
+    }
+
+    isQuizInProgress = true; // Set the flag to true indicating quiz is in progress
     currentQuiz = quizName;
     currentQuestionIndex = 0; // Reset question index
 
@@ -41,6 +49,7 @@ function startQuiz(quizName) {
     // If the selected quiz doesn't exist, show an error
     if (!selectedQuiz || !selectedQuiz.questions || selectedQuiz.questions.length === 0) {
         alert("No questions available for this quiz.");
+        isQuizInProgress = false; // Reset the flag in case of error
         return;
     }
 
@@ -52,6 +61,9 @@ function startQuiz(quizName) {
     document.getElementById('mainContent').classList.add('hidden');
     document.getElementById('quizContainer').classList.remove('hidden');
     
+    // Show the "End Quiz" button
+    showEndQuizButton();
+
     // Start showing questions
     showNextQuestion(selectedQuiz.questions);
 }
@@ -88,6 +100,31 @@ function showQuizOverMessage() {
     restartButton.textContent = "Start a New Quiz";
     restartButton.onclick = resetApp;
     questionArea.appendChild(restartButton);
+
+    // Reset the flag to allow starting a new quiz
+    isQuizInProgress = false;
+}
+
+// Show "End Quiz" button
+function showEndQuizButton() {
+    const endButton = document.createElement('button');
+    endButton.textContent = "End Quiz";
+    endButton.id = 'endQuizBtn';
+    endButton.onclick = endQuiz;
+    document.getElementById("quizContainer").appendChild(endButton);
+}
+
+// Handle the "End Quiz" button click
+function endQuiz() {
+    // Stop the current quiz and reset the state
+    showQuizOverMessage();
+    isQuizInProgress = false; // Reset the flag to allow starting a new quiz
+
+    // Remove the "End Quiz" button
+    const endButton = document.getElementById('endQuizBtn');
+    if (endButton) {
+        endButton.remove();
+    }
 }
 
 // Reset the app to the main screen
@@ -96,5 +133,6 @@ function resetApp() {
     document.getElementById('quizContainer').classList.add('hidden');
     currentQuiz = '';
     currentQuestionIndex = 0; // Reset question index to 0
+    isQuizInProgress = false; // Reset the flag to allow starting a new quiz
 }
 
