@@ -35,6 +35,12 @@ function startQuiz(quizType) {
     currentQuiz = quizType;
     currentQuestionIndex = 0;
 
+    // Check if the selected quiz has questions
+    if (!quizData[currentQuiz] || quizData[currentQuiz].length === 0) {
+        alert("No questions available for this quiz.");
+        return;
+    }
+
     // Hide the quiz tiles and show the quiz container
     document.getElementById('mainContent').classList.add('hidden');
     document.getElementById('quizContainer').classList.remove('hidden');
@@ -46,6 +52,8 @@ function startQuiz(quizType) {
 // Show the next question
 function showNextQuestion() {
     const quizQuestions = quizData[currentQuiz];
+    
+    // Check if we've reached the end of the quiz
     if (!quizQuestions || currentQuestionIndex >= quizQuestions.length) {
         showQuizOverMessage();
         return;
@@ -61,14 +69,20 @@ function showNextQuestion() {
         currentQuestionIndex++;
 
         // Move to the next question after a delay
-        setTimeout(showNextQuestion, 3000);
-    }, 3000);
+        setTimeout(showNextQuestion, 3000); // Show next question after 3 seconds
+    }, 3000); // Show answer after 3 seconds
 }
 
 // Show a message when the quiz is over
 function showQuizOverMessage() {
     const questionArea = document.getElementById("questionArea");
     questionArea.innerHTML = "<h2>Quiz Over! Well Done!</h2>";
+
+    // Optionally, you could add a button to restart the quiz or go back to the home screen
+    const restartButton = document.createElement('button');
+    restartButton.textContent = "Start a New Quiz";
+    restartButton.onclick = resetApp;
+    questionArea.appendChild(restartButton);
 }
 
 // Reset the app to the main screen
