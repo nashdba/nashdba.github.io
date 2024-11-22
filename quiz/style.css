@@ -1,68 +1,45 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    text-align: center;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    text-align: center;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 15px;
-}
-
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-
-#mainContent {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-}
-
+/* Style for the quiz tiles */
 .tile {
-    width: 150px;
-    height: 150px;
+    background-color: #f5f5dc; /* Light cream background */
+    border-radius: 15px;
+    padding: 20px;
     margin: 10px;
-    background-color: #f5f5dc; /* Cream color */
-    color: #333; /* Dark text for contrast */
-    display: flex;
-    justify-content: center;  /* Horizontally center content */
-    align-items: center;     /* Vertically center content */
-    font-size: 18px;
+    text-align: center;
     cursor: pointer;
-    transition: transform 0.3s;
-    border-radius: 50%;      /* Makes the tiles round */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
-    text-align: center;      /* Ensures text is centered */
-    padding: 10px;           /* Prevents text from touching the edges */
+    font-size: 20px;
 }
 
 .tile:hover {
-    transform: scale(1.1);
+    background-color: #e0e0d1;
 }
 
+/* Style for the quiz container */
 #quizContainer {
-    margin-top: 20px;
+    display: none; /* Initially hidden */
     text-align: center;
+    margin-top: 20px;
 }
 
-.hidden {
-    display: none;
+#questionArea {
+    font-size: 18px;
+    margin-bottom: 50px; /* Leave space for the 'End Quiz' button */
+}
+
+/* End quiz button style */
+#endQuizBtn {
+    background-color: red;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    position: relative;
+    bottom: 0;
+}
+
+/* Style for the question and answer display */
+.question, .answer {
+    margin-bottom: 30px; /* Ensure there is enough space for the button */
 }
 
