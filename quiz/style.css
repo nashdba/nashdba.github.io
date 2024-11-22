@@ -107,8 +107,9 @@ nav ul li a {
         font-size: 18px;
     }
 
-    #endQuizBtn {
+     #endQuizBtn {
         width: 100%;
+        max-width: 200px; /* Adjust the max-width for smaller screens */
         font-size: 14px;
     }
 }
