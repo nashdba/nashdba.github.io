@@ -64,7 +64,7 @@ function startQuiz(quizName) {
     document.getElementById('quizContainer').classList.remove('hidden');
     
     // Show the "End Quiz" button
-    showEndQuizButton();
+    document.getElementById('endQuizBtn').style.display = 'inline-block';
 
     // Start showing questions
     showNextQuestion(selectedQuiz.questions);
@@ -80,11 +80,15 @@ function showNextQuestion(questions) {
 
     const question = questions[currentQuestionIndex]; // Get the current question
     const questionArea = document.getElementById("questionArea");
-    questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>`;
+
+    // Set initial answer placeholder text
+    questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
+                              <div class="answer"><strong>Answer:</strong> ? ? ?</div>`;
 
     // Display the answer after a short delay (3 seconds)
     answerTimeout = setTimeout(() => {
-        questionArea.innerHTML += `<div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
+        questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
+                                  <div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
         
         // Move to the next question after a short delay
         currentQuestionIndex++; // Increment the question index
@@ -107,18 +111,6 @@ function showQuizOverMessage() {
     isQuizInProgress = false;
 }
 
-// Show "End Quiz" button
-function showEndQuizButton() {
-    // Check if the button already exists to avoid creating multiple buttons
-    if (!document.getElementById('endQuizBtn')) {
-        const endButton = document.createElement('button');
-        endButton.textContent = "End Quiz";
-        endButton.id = 'endQuizBtn';
-        endButton.onclick = endQuiz;
-        document.getElementById("quizContainer").appendChild(endButton);
-    }
-}
-
 // Handle the "End Quiz" button click
 function endQuiz() {
     // Stop the current quiz and reset the state
@@ -130,10 +122,7 @@ function endQuiz() {
     clearTimeout(answerTimeout);
 
     // Remove the "End Quiz" button
-    const endButton = document.getElementById('endQuizBtn');
-    if (endButton) {
-        endButton.remove();
-    }
+    document.getElementById('endQuizBtn').style.display = 'none';
 }
 
 // Reset the app to the main screen
