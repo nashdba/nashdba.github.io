@@ -102,8 +102,8 @@
         ]
     },
     {
-       "name": "Maths",
-       "questions": [
+        "name": "Maths",
+        "questions": [
 	    { "question": "What is 2 + 5?", "answer": "7" },
 	    { "question": "What is 9 + 8?", "answer": "17" }, 
 	    { "question": "What is 15 - 6?", "answer": "9" },
