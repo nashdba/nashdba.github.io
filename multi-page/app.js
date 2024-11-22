@@ -7,10 +7,15 @@
 	}
 
 	function success(decodeIDToken) {
-		document.getElementById('welcome').textContent = 'Hello, ' + decodeIDToken.name;
+		document.getElementById('welcome').textContent = 'Hello, ';
 	}
 
 	(async function () {
+
+		const currentPage = window.location.pathname;
+		console.error('Window Locator Ref: ', window.location.href);
+		console.error('Current Page:',currentPage);
+		
 		const appID = new AppID();
 		let tokens;
 		try {
@@ -35,7 +40,7 @@
 			showError(e);
 		}
 		document.getElementById('login-btn').addEventListener('click', async () => {
-			document.getElementById('login').setAttribute('class', 'hidden');
+			document.getElementById('login-btn').setAttribute('class', 'hidden');
 			document.getElementById('error').textContent = '';
 
 			try {
@@ -47,4 +52,24 @@
 			}
 		});
 
-	})()
+
+
+// If user is not authenticated, redirect to login page
+if (currentPage !== '/multi-page/login.html' && !appID.isAuthenticated()) {
+    console.error('You are not logged in: No see page!!');
+    window.location.href = 'login.html';
+}
+		
+// Handle redirect on Home page currentPage === '/multi-page/index.html' && appID.isLoggedIn()
+    if (currentPage) {
+            console.error('Entering index.html logic:');
+	    console.error('Current Page2:',currentPage);
+	    //console.error('Window Locator Ref: ', window.location.href);
+            //window.location.href = 'https://nashdba.github.io/multi-page/profile.html';	   
+	    //window.location.replace('https://nashdba.github.io/multi-page/profile.html');
+        
+    }
+
+
+//end async
+})()
