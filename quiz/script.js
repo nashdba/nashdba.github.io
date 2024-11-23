@@ -121,7 +121,8 @@ function showNextQuestion(questions) {
     const questionArea = document.getElementById("questionArea");
 
     // Set initial answer placeholder text
-    questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
+    questionArea.innerHTML = `<div class="qcounter"><strong>Question: ${numQuestionsInTest}</strong> of 10</div>
+                              <div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                               <div class="answer"><strong>Answer:</strong> ? ? ?</div>`;
 
     // Speak the question if speech is enabled
@@ -129,7 +130,8 @@ function showNextQuestion(questions) {
 
     // Display the answer after a short delay (3 seconds)
     answerTimeout = setTimeout(() => {
-        questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
+        questionArea.innerHTML = `<div class="qcounter"><strong>Question: ${numQuestionsInTest}</strong> of 10</div>
+                                  <div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                                   <div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
 
         // Speak the answer if speech is enabled
