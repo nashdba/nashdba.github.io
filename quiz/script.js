@@ -5,6 +5,18 @@ let isQuizInProgress = false; // Flag to track if a quiz is in progress
 let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
+let numQuestionsInTest = 10; 
+
+function getRandomInt(min, max) {
+  // Ensure the min and max values are integers
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  // Generate a random integer between min and max (inclusive)
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 let speechEnabled = false; // Default state is speech disabled
 
 // Speech synthesis initialization
@@ -121,7 +133,7 @@ function showNextQuestion(questions) {
         speak(question.answer);
         
         // Move to the next question after a short delay
-        currentQuestionIndex++; // Increment the question index
+        currentQuestionIndex = getRandomInt(0, questions.length); // Increment the question index
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 4500); // Show answer after 3 seconds
 }
