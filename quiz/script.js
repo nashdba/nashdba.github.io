@@ -122,7 +122,7 @@ function showNextQuestion(questions) {
     const questionArea = document.getElementById("questionArea");
 
     // Set initial answer placeholder text
-    questionArea.innerHTML = `<div class="qcounter"><strong>Question: ${numQuestionsInTest}</strong> of 10</div>
+    questionArea.innerHTML = `<div class="qcounter"><strong>Question:</strong> ${numQuestionsInTest} of 10</div>
                               <div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                               <div class="answer"><strong>Answer:</strong> ? ? ?</div>`;
 
@@ -131,7 +131,7 @@ function showNextQuestion(questions) {
 
     // Display the answer after a short delay (3 seconds)
     answerTimeout = setTimeout(() => {
-        questionArea.innerHTML = `<div class="qcounter"><strong>Question: ${numQuestionsInTest}</strong> of 10</div>
+        questionArea.innerHTML = `<div class="qcounter"><strong>Question:</strong> ${numQuestionsInTest} of 10</div>
                                   <div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                                   <div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
 
@@ -148,11 +148,14 @@ function showNextQuestion(questions) {
 // Show a message when the quiz is over
 function showQuizOverMessage() {
     const questionArea = document.getElementById("questionArea");
-    questionArea.innerHTML = "<h2>Quiz Over! Well Done!</h2>";
+    
+    questionArea.innerHTML = "<h2>Quiz Over!</h2>";
 
     // Optionally, you could add a button to restart the quiz or go back to the home screen
     const restartButton = document.createElement('button');
     restartButton.textContent = "Start a New Quiz";
+    restartButton.style.backgroundColor = 'blue';  // Set background color
+    restartButton.style.color = 'white';           // Set text color
     restartButton.onclick = resetApp;
     questionArea.appendChild(restartButton);
 
