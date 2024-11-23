@@ -22,8 +22,10 @@ speechToggle.addEventListener('change', (e) => {
 function speak(text) {
     if (speechEnabled) {
         const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        synth.speak(utterance);
 
-        const voices = synth.getVoices();
+        /*const voices = synth.getVoices();
 
         // Find a British English voice (en-GB)
         const britishVoice = voices.find(voice => voice.lang === 'en-GB');
@@ -40,7 +42,7 @@ function speak(text) {
         console.log('UK English voice not found');
     }
         
-        //synth.speak(utterance);
+        //synth.speak(utterance); */
     }
 }
 
