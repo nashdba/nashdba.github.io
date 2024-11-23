@@ -108,10 +108,16 @@ function showNextQuestion(questions) {
     questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                               <div class="answer"><strong>Answer:</strong> ? ? ?</div>`;
 
+    // Speak the question if speech is enabled
+    speak(question.question);
+
     // Display the answer after a short delay (3 seconds)
     answerTimeout = setTimeout(() => {
         questionArea.innerHTML = `<div class="question"><strong>Q${currentQuestionIndex + 1}:</strong> ${question.question}</div>
                                   <div class="answer"><strong>Answer:</strong> ${question.answer}</div>`;
+
+        // Speak the answer if speech is enabled
+        speak(question.answer);
         
         // Move to the next question after a short delay
         currentQuestionIndex++; // Increment the question index
