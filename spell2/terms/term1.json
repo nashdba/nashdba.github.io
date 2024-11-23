@@ -1,0 +1,15 @@
+{
+  "week1": [
+    { "word": "apple", "definition": "A fruit that grows on trees." },
+    { "word": "banana", "definition": "A long, curved fruit with a yellow skin." }
+  ],
+  "week2": [
+    { "word": "cat", "definition": "A small domesticated carnivorous mammal." },
+    { "word": "dog", "definition": "A domesticated carnivorous mammal." }
+  ],
+  "week3": [
+    { "word": "house", "definition": "A building for human habitation." },
+    { "word": "car", "definition": "A vehicle for moving people from one place to another." }
+  ]
+}
+
