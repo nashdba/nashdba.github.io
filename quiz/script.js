@@ -5,7 +5,7 @@ let isQuizInProgress = false; // Flag to track if a quiz is in progress
 let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
-let numQuestionsInTest = 10; 
+let numQuestionsInTest; 
 
 function getRandomInt(min, max) {
   // Ensure the min and max values are integers
@@ -79,7 +79,8 @@ function startQuiz(quizName) {
 
     isQuizInProgress = true; // Set the flag to true indicating quiz is in progress
     currentQuiz = quizName;
-    currentQuestionIndex = 0; // Reset question index
+    currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
+    numQuestionsInTest = 10;
 
     // Find the quiz data based on the quiz name
     const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
@@ -109,7 +110,7 @@ function startQuiz(quizName) {
 // Show the next question
 function showNextQuestion(questions) {
     // Check if we've reached the end of the quiz
-    if (currentQuestionIndex >= questions.length) {
+    if (currentQuestionIndex >= questions.length || numQuestionsInTest >= 10) {
         showQuizOverMessage();
         return;
     }
@@ -134,6 +135,7 @@ function showNextQuestion(questions) {
         
         // Move to the next question after a short delay
         currentQuestionIndex = getRandomInt(0, questions.length); // Increment the question index
+        numQuestionsInTest++;
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 4500); // Show answer after 3 seconds
 }
