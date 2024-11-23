@@ -85,7 +85,7 @@ function startQuiz(quizName) {
     const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
 
     currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
-    numQuestionsInTest = 0; // resets the questin counter
+    numQuestionsInTest = 1; // resets the questons counter
 
 
     // If the selected quiz doesn't exist, show an error
