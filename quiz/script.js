@@ -122,7 +122,7 @@ function showNextQuestion(questions) {
         
         // Move to the next question after a short delay
         currentQuestionIndex++; // Increment the question index
-        questionTimeout = setTimeout(() => showNextQuestion(questions), 3500); // Show next question after 3 seconds
+        questionTimeout = setTimeout(() => showNextQuestion(questions), 4000); // Show next question after 3 seconds
     }, 3500); // Show answer after 3 seconds
 }
 
