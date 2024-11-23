@@ -24,25 +24,6 @@ function speak(text) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-GB';
         synth.speak(utterance);
-
-        /*const voices = synth.getVoices();
-
-        // Find a British English voice (en-GB)
-        const britishVoice = voices.find(voice => voice.lang === 'en-GB');
-
-        //utterance.lang = 'en-GB';
-        //utterance.voice = synth.getVoices()[0]; // Select a voice
-
-    if (britishVoice) {
-        const utterance = new SpeechSynthesisUtterance('Hello, how are you?');
-        utterance.voice = britishVoice;  // Set the voice to the UK English voice
-        utterance.lang = 'en-GB';  // Optionally set the language
-        synth.speak(utterance);
-     } else {
-        console.log('UK English voice not found');
-    }
-        
-        //synth.speak(utterance); */
     }
 }
 
