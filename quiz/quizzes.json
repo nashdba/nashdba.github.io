@@ -425,7 +425,7 @@
 	]
      },
     {
-        "name": "Maths",
+        "name": "Times Tables",
         "questions": [
     { "question": "What is 8 x 3?", "answer": "24" },
     { "question": "What is 5 x 7?", "answer": "35" },
