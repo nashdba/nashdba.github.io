@@ -22,6 +22,8 @@ speechToggle.addEventListener('change', (e) => {
 function speak(text) {
     if (speechEnabled) {
         const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        
         utterance.voice = synth.getVoices()[0]; // Select a voice
         synth.speak(utterance);
     }
