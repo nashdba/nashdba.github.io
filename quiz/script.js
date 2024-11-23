@@ -5,6 +5,29 @@ let isQuizInProgress = false; // Flag to track if a quiz is in progress
 let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
+let speechEnabled = true; // Default state is speech enabled
+
+// Speech synthesis initialization
+const synth = window.speechSynthesis;
+
+// Get the toggle element for enabling/disabling speech
+const speechToggle = document.getElementById('speechToggle');
+
+// Event listener to toggle speech on/off
+speechToggle.addEventListener('change', (e) => {
+    speechEnabled = e.target.checked;
+});
+
+// Function to speak text (question or answer)
+function speak(text) {
+    if (speechEnabled) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.voice = synth.getVoices()[0]; // Select a voice
+        synth.speak(utterance);
+    }
+}
+
+
 // Load quiz data when the page loads
 window.onload = () => {
     loadQuizzes();
