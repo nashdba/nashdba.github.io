@@ -14,6 +14,11 @@
                 <li><a href="#" id="homeBtn">Home</a></li>
             </ul>
         </nav>
+          <!-- Option to enable/disable speech -->
+        <div>
+            <label for="speechToggle">Enable Speech</label>
+            <input type="checkbox" id="speechToggle" unchecked>
+        </div>
     </header>
     <main id="mainContent">
         <!-- Quiz tiles will be rendered here -->
@@ -22,11 +27,7 @@
         <div id="questionArea">
             <!-- Questions will be displayed here -->
         </div>
-        <!-- Option to enable/disable speech -->
-        <div>
-            <label for="speechToggle">Enable Speech</label>
-            <input type="checkbox" id="speechToggle" unchecked>
-        </div>
+        <!-- End Quiz Button -->>
         <button id="endQuizBtn" class="hidden" onclick="endQuiz()">End Quiz</button>
     </div>
 
