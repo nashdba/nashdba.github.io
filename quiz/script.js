@@ -5,7 +5,7 @@ let isQuizInProgress = false; // Flag to track if a quiz is in progress
 let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
-let speechEnabled = true; // Default state is speech enabled
+let speechEnabled = false; // Default state is speech disabled
 
 // Speech synthesis initialization
 const synth = window.speechSynthesis;
