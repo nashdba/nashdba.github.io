@@ -79,11 +79,13 @@ function startQuiz(quizName) {
 
     isQuizInProgress = true; // Set the flag to true indicating quiz is in progress
     currentQuiz = quizName;
+    
+    // Find the quiz data based on the quiz name
+    const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
+
     currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
     numQuestionsInTest = 10;
 
-    // Find the quiz data based on the quiz name
-    const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
 
     // If the selected quiz doesn't exist, show an error
     if (!selectedQuiz || !selectedQuiz.questions || selectedQuiz.questions.length === 0) {
