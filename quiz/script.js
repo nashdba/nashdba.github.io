@@ -6,6 +6,7 @@ let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
 let numQuestionsInTest; 
+const MAXNUMQUESTIONSINTEST = 10; 
 
 function getRandomInt(min, max) {
   // Ensure the min and max values are integers
@@ -84,7 +85,7 @@ function startQuiz(quizName) {
     const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
 
     currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
-    numQuestionsInTest = 0;
+    numQuestionsInTest = 0; // resets the questin counter
 
 
     // If the selected quiz doesn't exist, show an error
@@ -112,7 +113,7 @@ function startQuiz(quizName) {
 // Show the next question
 function showNextQuestion(questions) {
     // Check if we've reached the end of the quiz
-    if (currentQuestionIndex >= questions.length || numQuestionsInTest >= 10) {
+    if (currentQuestionIndex >= questions.length || numQuestionsInTest > MAXNUMQUESTIONSINTEST) {
         showQuizOverMessage();
         return;
     }
