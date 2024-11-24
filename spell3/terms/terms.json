@@ -1,0 +1,17 @@
+{
+  "week1": [
+    {"word": "cat"},
+    {"word": "dog"},
+    {"word": "fish"},
+    {"word": "bird"},
+    {"word": "apple"}
+  ],
+  "week2": [
+    {"word": "house"},
+    {"word": "tree"},
+    {"word": "car"},
+    {"word": "book"},
+    {"word": "pen"}
+  ]
+}
+
