@@ -18,6 +18,32 @@
             "word": "dog",
             "meaning": "A domesticated carnivorous mammal with a barking sound."
         }
-    ]
+    ],
+    "week3": [
+    { "word": "usual", "definition": "Commonly occurring or done; normal." },
+    { "word": "treasure", "definition": "A collection of valuable items, often gold or jewels." },
+    { "word": "Asia", "definition": "The largest continent on Earth, located primarily in the Eastern and Northern Hemispheres." },
+    { "word": "conclusion", "definition": "The end or final part of something; a decision or judgment reached after considering facts." },
+    { "word": "night", "definition": "The time of day when it is dark outside, typically from sunset to sunrise." },
+    { "word": "blue", "definition": "A color that is between green and violet on the spectrum of visible light." },
+    { "word": "there", "definition": "Refers to a location or place (e.g., 'over there')." },
+    { "word": "their", "definition": "A possessive form of 'they', used to show ownership (e.g., 'their house')." },
+    { "word": "span", "definition": "The full extent or range of something, or a period of time." },
+    { "word": "alive", "definition": "Living; not dead." },
+    { "word": "dead", "definition": "No longer alive; the opposite of alive." }
+  ],
+    "week4": [
+    { "word": "World", "definition": "The planet we live on, or the people and things in it." },
+    { "word": "worst", "definition": "The least good or most bad; the opposite of best." },
+    { "word": "warmer", "definition": "Having a higher temperature than something else; not cold." },
+    { "word": "award", "definition": "A prize or recognition given for achievement." },
+    { "word": "pair", "definition": "Two things that are the same or match." },
+    { "word": "pear", "definition": "A sweet fruit that is typically green or yellow with a round shape that narrows toward the stem." },
+    { "word": "two", "definition": "The number that comes after one and before three." },
+    { "word": "to", "definition": "A preposition used to indicate direction, place, or position." },
+    { "word": "butterfly", "definition": "A type of insect with large, colorful wings and a slender body." },
+    { "word": "arm span", "definition": "The distance from the tip of one hand to the tip of the other hand when the arms are stretched out." },
+    { "word": "lion", "definition": "A large wild cat with a golden-brown coat, known as the 'king of the jungle.'" }
+  ]
 }
 
