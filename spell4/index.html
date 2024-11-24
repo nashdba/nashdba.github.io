@@ -71,8 +71,6 @@
         <h2>Select Week</h2>
         <select id="week-selector">
             <option value="">-- Select Week --</option>
-            <option value="week1">Week 1</option>
-            <option value="week2">Week 2</option>
         </select>
 
         <h2>Words of the Selected Week</h2>
@@ -102,11 +100,23 @@
             .then(data => {
                 // Store the word list for all weeks
                 window.allWeeksData = data;
+                populateWeekSelector();
             })
             .catch(error => {
                 console.error('Error loading the word list:', error);
                 alert('There was an error loading the word list.');
             });
+
+        // Function to populate the week selector dropdown dynamically
+        function populateWeekSelector() {
+            const weeks = Object.keys(window.allWeeksData);
+            weeks.forEach(week => {
+                const option = document.createElement('option');
+                option.value = week;
+                option.textContent = `Week ${week.replace('week', '')}`;
+                weekSelector.appendChild(option);
+            });
+        }
 
         // Function to display words based on selected week
         function displayWords(week) {
