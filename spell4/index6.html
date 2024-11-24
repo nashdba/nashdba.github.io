@@ -118,7 +118,7 @@
         const testRandomButton = document.getElementById('test-random-button');
         const endTestButton = document.getElementById('end-test-button');
         let wordListData = [];
-        let testInProgress = false;
+        let testInProgress = false;  // Flag to control whether the test or training is active
         let correctWords = [];
         let incorrectWords = [];
 
@@ -166,7 +166,7 @@
                 wordElement.dataset.definition = wordData.definition;
                 wordListContainer.appendChild(wordElement);
 
-                // Add click listener to each word item
+                // Add click listener to each word item (only if not in test mode)
                 wordElement.addEventListener('click', () => {
                     if (!testInProgress) {
                         highlightWord(wordElement);
@@ -217,7 +217,7 @@
         // Function to read all words for the selected week
         function readAllWords() {
             let index = 0;
-            testInProgress = true; // Disable word selection
+            testInProgress = true;  // Disable word selection during training
             readAllButton.disabled = true;
             testOrderButton.disabled = true;
             testRandomButton.disabled = true;
@@ -225,7 +225,7 @@
 
             function nextWord() {
                 if (index >= wordListData.length) {
-                    testInProgress = false; // Re-enable word selection
+                    testInProgress = false;  // Re-enable word selection after training
                     readAllButton.disabled = false;
                     testOrderButton.disabled = false;
                     testRandomButton.disabled = false;
@@ -239,7 +239,7 @@
                 speakWord(wordData.word);
                 spellWord(wordData.word);
                 index++;
-                setTimeout(nextWord, 3300); // 0.3s longer delay between words
+                setTimeout(nextWord, 3300);  // 0.3s longer delay between words
             }
             nextWord();
         }
@@ -265,10 +265,10 @@
             let score = 0;
             let currentTestIndex = 0;
 
-            correctWords = []; // Reset correct words
-            incorrectWords = []; // Reset incorrect words
+            correctWords = [];  // Reset correct words
+            incorrectWords = [];  // Reset incorrect words
 
-            testInProgress = true; // Disable word selection
+            testInProgress = true;  // Disable word selection during test
             readAllButton.disabled = true;
             testOrderButton.disabled = true;
             testRandomButton.disabled = true;
@@ -277,8 +277,8 @@
             function askForSpelling() {
                 if (currentTestIndex >= wordsToTest.length) {
                     alert(`Test Complete! You scored ${score} out of ${wordsToTest.length}`);
-                    wordListContainer.style.display = 'block'; // Show word list again
-                    highlightTestResults(); // Highlight correct/incorrect words
+                    wordListContainer.style.display = 'block';  // Show word list again
+                    highlightTestResults();  // Highlight correct/incorrect words
                     return;
                 }
 
