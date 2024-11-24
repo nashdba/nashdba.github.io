@@ -12,6 +12,9 @@ recognition.lang = 'en-US';
 recognition.continuous = false;
 recognition.interimResults = false;
 
+// Initialize speech synthesis
+const synth = window.speechSynthesis;
+
 // Load words data from a JSON file
 async function loadWords() {
     const weekNumber = document.getElementById("weekSelect").value;
@@ -49,6 +52,7 @@ function highlightWord(index) {
     const wordItems = document.querySelectorAll('#wordList li');
     wordItems.forEach(item => item.classList.remove('highlight'));
     wordItems[index].classList.add('highlight');
+    document.getElementById("wordMeaning").textContent = `Meaning: ${currentWeekWords[index].meaning}`;
 }
 
 // Start the test in order
@@ -105,7 +109,11 @@ function runTest() {
 // Ask the child to spell the word
 function askToSpell(wordObj) {
     const resultElement = document.getElementById("result");
+    
+    // Ask the child to spell the word using speech synthesis
     resultElement.innerHTML = `How do you spell "${wordObj.word}"?`;
+    const question = new SpeechSynthesisUtterance(`How do you spell ${wordObj.word}?`);
+    synth.speak(question);
 
     // Start speech recognition to capture the user's response
     recognition.start();
@@ -117,23 +125,18 @@ function askToSpell(wordObj) {
     };
 
     recognition.onerror = (event) => {
-        console.error("Error with speech recognition:", event);
-        document.getElementById("result").innerHTML = "Sorry, I couldn't hear you. Try again.";
+        console.error('Speech recognition error:', event.error);
     };
 }
 
-// Check the spelling of the word
+// Check if the spelling is correct
 function checkSpelling(spokenWord) {
-    const correctWord = currentWeekWords[currentWordIndex].word.toLowerCase();
-    const resultElement = document.getElementById("result");
-    
-    if (spokenWord === correctWord) {
+    const wordObj = currentWeekWords[currentWordIndex];
+    if (spokenWord === wordObj.word.toLowerCase()) {
         correctCount++;
-        resultElement.innerHTML = `<span style="color: green;">Correct!</span>`;
         document.getElementById("correctCount").textContent = correctCount;
     } else {
         incorrectCount++;
-        resultElement.innerHTML = `<span style="color: red;">Incorrect! The correct word was ${correctWord}.</span>`;
         document.getElementById("incorrectCount").textContent = incorrectCount;
     }
 
@@ -145,10 +148,10 @@ function checkSpelling(spokenWord) {
 function endTest() {
     testRunning = false;
     document.getElementById("result").innerHTML = `Test complete! Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
-    
+
     // Verbal feedback
     const feedbackSpeech = new SpeechSynthesisUtterance(`Well done! You got ${correctCount} out of ${currentWeekWords.length}.`);
-    window.speechSynthesis.speak(feedbackSpeech);
+    synth.speak(feedbackSpeech);
 
     setTimeout(() => {
         document.getElementById("wordList").style.display = "block"; // Show the word list again
@@ -169,6 +172,10 @@ function stopTest() {
 
 // Read the list aloud, highlighting each word
 function readListAloud() {
+    if (testRunning) {
+        stopTest(); // Stop any ongoing test
+    }
+
     let index = 0;
     const wordListItems = document.querySelectorAll("#wordList li");
 
@@ -202,13 +209,13 @@ function readListAloud() {
 // Function to speak the word
 function speakWord(word) {
     const utterance = new SpeechSynthesisUtterance(word);
-    window.speechSynthesis.speak(utterance);
+    synth.speak(utterance);
 }
 
 // Function to spell out the word aloud
 function spellWord(word) {
     const letters = word.split('');
     const spelling = new SpeechSynthesisUtterance(letters.join(" "));
-    window.speechSynthesis.speak(spelling);
+    synth.speak(spelling);
 }
 
