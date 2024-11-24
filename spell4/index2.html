@@ -61,6 +61,13 @@
             font-size: 1.1em;
             margin-top: 20px;
         }
+        #definition-title {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #word-list {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +85,7 @@
             <!-- Dynamic word list will be inserted here -->
         </ul>
 
+        <div id="definition-title">Word Definition:</div>
         <div class="definition" id="word-definition"></div>
 
         <button id="read-all-button" class="button" disabled>Read All Words</button>
@@ -89,6 +97,7 @@
         const weekSelector = document.getElementById('week-selector');
         const wordListContainer = document.getElementById('word-list');
         const wordDefinition = document.getElementById('word-definition');
+        const wordDefinitionTitle = document.getElementById('definition-title');
         const readAllButton = document.getElementById('read-all-button');
         const testOrderButton = document.getElementById('test-order-button');
         const testRandomButton = document.getElementById('test-random-button');
@@ -125,6 +134,7 @@
             // Clear previous list and disable buttons until words are loaded
             wordListContainer.innerHTML = '';
             wordDefinition.innerHTML = '';
+            wordDefinitionTitle.style.display = 'none'; // Hide definition title initially
             readAllButton.disabled = false;
             testOrderButton.disabled = false;
             testRandomButton.disabled = false;
@@ -143,7 +153,7 @@
                 wordElement.addEventListener('click', () => {
                     highlightWord(wordElement);
                     showDefinition(wordElement);
-                    //speakWord(wordElement.dataset.word);
+                    speakWord(wordElement.dataset.word);
                     spellWord(wordElement.dataset.word);
                     speakWord(wordElement.dataset.word);
                 });
@@ -183,6 +193,7 @@
         // Function to show the definition of the selected word
         function showDefinition(wordElement) {
             wordDefinition.textContent = wordElement.dataset.definition;
+            wordDefinitionTitle.style.display = 'block'; // Show the title when displaying the definition
         }
 
         // Function to read all words for the selected week
@@ -204,7 +215,7 @@
                 const wordElement = document.querySelector(`[data-word="${wordData.word}"]`);
                 highlightWord(wordElement);
                 showDefinition(wordElement);
-                //speakWord(wordData.word);
+                speakWord(wordData.word);
                 spellWord(wordData.word);
                 speakWord(wordData.word);
 
@@ -224,6 +235,11 @@
 
         // Function to start the test
         function startTest(isRandom) {
+            // Hide word list and show only the definition
+            wordListContainer.style.display = 'none';
+            wordDefinition.innerHTML = ''; // Clear previous definition
+            wordDefinitionTitle.style.display = 'block';
+
             let wordsToTest = [...wordListData];
             if (isRandom) {
                 wordsToTest = wordsToTest.sort(() => Math.random() - 0.5);
@@ -234,10 +250,12 @@
             function askForSpelling() {
                 if (currentTestIndex >= wordsToTest.length) {
                     alert(`Test Complete! You scored ${score} out of ${wordsToTest.length}`);
+                    wordListContainer.style.display = 'block'; // Show word list again
                     return;
                 }
 
                 const word = wordsToTest[currentTestIndex].word;
+                showDefinitionForTest(word);
                 speakWord(word);
                 setTimeout(() => {
                     // Start speech recognition
@@ -269,6 +287,11 @@
         testOrderButton.addEventListener('click', () => startTest(false));
         testRandomButton.addEventListener('click', () => startTest(true));
 
+        // Function to show definition for the test
+        function showDefinitionForTest(word) {
+            const wordData = wordListData.find(item => item.word === word);
+            wordDefinition.textContent = wordData ? wordData.definition : '';
+        }
     </script>
 
 </body>
