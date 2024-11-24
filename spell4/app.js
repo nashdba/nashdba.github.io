@@ -23,14 +23,17 @@ const definitionText = document.getElementById('definitionText');
 
 let currentWords = [];
 
-// Load words for the selected week
+// Load all words (from both weeks) into a single ordered list
 function loadWords() {
-  const week = weekSelector.value;
-  if (wordData[week]) {
-    currentWords = wordData[week];
-  } else {
-    currentWords = [];
+  const combinedWords = [];
+  // Merge words from both weeks
+  for (const week in wordData) {
+    wordData[week].forEach((item) => {
+      combinedWords.push(item);
+    });
   }
+
+  currentWords = combinedWords;
 
   wordListDiv.innerHTML = '';
   currentWords.forEach((item, index) => {
@@ -43,7 +46,7 @@ function loadWords() {
   });
 }
 
-// Show definition of the highlighted word
+// Show definition of the highlighted word and read it aloud
 function showDefinition(index) {
   const word = currentWords[index].word;
   const meaning = currentWords[index].meaning;
@@ -60,6 +63,25 @@ function showDefinition(index) {
       div.classList.remove('highlighted');
     }
   });
+
+  // Use speech synthesis to say the word, spell it, and say it again
+  const synth = window.speechSynthesis;
+
+  // Say the word
+  const wordUtterance = new SpeechSynthesisUtterance(word);
+  synth.speak(wordUtterance);
+
+  wordUtterance.onend = function () {
+    // Spell the word
+    const spellUtterance = new SpeechSynthesisUtterance(`Spelling: ${word.split('').join(' ')}`);
+    synth.speak(spellUtterance);
+
+    spellUtterance.onend = function () {
+      // Repeat the word
+      const repeatUtterance = new SpeechSynthesisUtterance(word);
+      synth.speak(repeatUtterance);
+    };
+  };
 }
 
 // Speak the word, spell it, and repeat the word
