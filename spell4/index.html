@@ -88,14 +88,14 @@
         <button class="button" id="stopTestButton" onclick="stopTest()" style="display: none;">Stop Test</button>
     </div>
 
-    <div class="progress">
+    <div class="progress" style="display: none;" id="scoreBoard">
         <p>Correct Spelling: <span id="correctCount">0</span></p>
         <p>Incorrect Spelling: <span id="incorrectCount">0</span></p>
     </div>
 
     <div>
-        <label for="inputField">Your Answer:</label>
-        <input type="text" id="inputField" placeholder="Your answer here..." />
+        <label for="inputField" style="display: none;" id="answerLabel">Your Answer:</label>
+        <input type="text" id="inputField" placeholder="Your answer here..." style="display: none;" />
     </div>
 
     <div id="result"></div>

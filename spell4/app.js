@@ -8,7 +8,7 @@ let currentWordTimer; // Timer for each word
 
 // Initialize speech recognition
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'en-US';
+recognition.lang = 'en-GB';  // Set to British English
 recognition.continuous = false;
 recognition.interimResults = false;
 
@@ -60,8 +60,9 @@ function startSpellingTest() {
     testRunning = true;
     resetScores();
     document.getElementById("wordList").style.display = "none"; // Hide word list
+    document.getElementById("scoreBoard").style.display = "block"; // Show score board
     document.getElementById("inputField").style.display = "block"; // Show input field
-    document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("answerLabel").style.display = "block"; // Show answer label
     document.getElementById("stopTestButton").style.display = "inline-block"; // Show stop test button
 
     currentWordIndex = 0;
@@ -73,8 +74,9 @@ function startRandomTest() {
     testRunning = true;
     resetScores();
     document.getElementById("wordList").style.display = "none"; // Hide word list
+    document.getElementById("scoreBoard").style.display = "block"; // Show score board
     document.getElementById("inputField").style.display = "block"; // Show input field
-    document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("answerLabel").style.display = "block"; // Show answer label
     document.getElementById("stopTestButton").style.display = "inline-block"; // Show stop test button
 
     // Shuffle the words for random order
@@ -139,7 +141,6 @@ function checkSpelling(spokenWord) {
         incorrectCount++;
         document.getElementById("incorrectCount").textContent = incorrectCount;
     }
-
     currentWordIndex++;
     setTimeout(runTest, 2000); // Move to the next word after 2 seconds
 }
@@ -157,17 +158,19 @@ function endTest() {
         document.getElementById("wordList").style.display = "block"; // Show the word list again
         document.getElementById("inputField").style.display = "none"; // Hide input field
         document.getElementById("result").style.display = "none"; // Hide result box
+        document.getElementById("scoreBoard").style.display = "none"; // Hide score board
     }, 3000);
 }
 
 // Stop the test and return to the list
 function stopTest() {
     testRunning = false;
+    recognition.stop();
     document.getElementById("wordList").style.display = "block"; // Show the word list again
     document.getElementById("inputField").style.display = "none"; // Hide input field
     document.getElementById("result").style.display = "none"; // Hide result box
+    document.getElementById("scoreBoard").style.display = "none"; // Hide score board
     document.getElementById("stopTestButton").style.display = "none"; // Hide stop test button
-    recognition.stop();
 }
 
 // Read the list aloud, highlighting each word
@@ -182,7 +185,7 @@ function readListAloud() {
     const readNextWord = () => {
         if (index < currentWeekWords.length) {
             const wordObj = currentWeekWords[index];
-            
+
             // Highlight the current word in the list
             wordListItems.forEach(item => item.classList.remove("highlight"));
             wordListItems[index].classList.add("highlight");
@@ -200,6 +203,8 @@ function readListAloud() {
         } else {
             // Hide word list and meaning after completion
             document.getElementById("wordMeaning").textContent = '';
+            // Remove highlight after the last word
+            wordListItems.forEach(item => item.classList.remove("highlight"));
         }
     };
 
@@ -209,6 +214,7 @@ function readListAloud() {
 // Function to speak the word
 function speakWord(word) {
     const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-GB'; // Set to British English
     synth.speak(utterance);
 }
 
@@ -216,6 +222,7 @@ function speakWord(word) {
 function spellWord(word) {
     const letters = word.split('');
     const spelling = new SpeechSynthesisUtterance(letters.join(" "));
+    spelling.lang = 'en-GB'; // Set to British English
     synth.speak(spelling);
 }
 
