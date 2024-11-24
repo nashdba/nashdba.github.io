@@ -73,13 +73,13 @@ async function populateWeekSelector() {
   }
 }
 
-// Function to get a British English female voice
-function getBritishFemaleVoice() {
+// Function to get a default British English voice (en-GB)
+function getBritishVoice() {
   const synth = window.speechSynthesis;
   const voices = synth.getVoices();
 
-  // Find a female British English voice
-  return voices.find(voice => voice.lang === 'en-GB' && voice.name.includes('Female')) || voices[0];  // Default if none found
+  // Find a British English voice (not specifying female or male)
+  return voices.find(voice => voice.lang === 'en-GB') || voices[0];  // Default if none found
 }
 
 // Function to speak the word (say word, spell it, then say word again)
@@ -88,8 +88,8 @@ function speakWord(word, meaning) {
   const utterance = new SpeechSynthesisUtterance();
   utterance.lang = 'en-GB'; // Set the language to British English
 
-  // Set the voice to a British English female voice
-  utterance.voice = getBritishFemaleVoice();
+  // Set the voice to a British English voice
+  utterance.voice = getBritishVoice();
 
   // Speak the word
   utterance.text = `The word is ${word}`;
@@ -190,7 +190,7 @@ function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-GB'; // British English
-  utterance.voice = getBritishFemaleVoice(); // Set voice to British English
+  utterance.voice = getBritishVoice(); // Set voice to British English
   utterance.rate = rate; // Slow down the rate of speech for better comprehension
   synth.speak(utterance);
 }
