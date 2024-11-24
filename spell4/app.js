@@ -6,7 +6,8 @@ fetch('terms/terms.json')
   .then(response => response.json())
   .then(data => {
     wordData = data;  // Store the fetched JSON data into wordData
-    loadWords();       // Once data is loaded, call loadWords to display them
+    loadWeeks();       // Load the weeks in the dropdown
+    loadWords();       // Display words for the selected week
   })
   .catch(error => {
     console.error('Error loading the terms data:', error);
@@ -23,27 +24,36 @@ const definitionText = document.getElementById('definitionText');
 
 let currentWords = [];
 
-// Load all words (from both weeks) into a single ordered list
-function loadWords() {
-  const combinedWords = [];
-  // Merge words from both weeks
+// Load weeks into the dropdown
+function loadWeeks() {
   for (const week in wordData) {
-    wordData[week].forEach((item) => {
-      combinedWords.push(item);
-    });
+    const option = document.createElement('option');
+    option.value = week;
+    option.textContent = week;
+    weekSelector.appendChild(option);
   }
+}
 
-  currentWords = combinedWords;
+// Load words for the selected week
+function loadWords() {
+  const selectedWeek = weekSelector.value;
 
-  wordListDiv.innerHTML = '';
-  currentWords.forEach((item, index) => {
-    const wordDiv = document.createElement('div');
-    wordDiv.classList.add('word-item');
-    wordDiv.id = `word-${index}`;
-    wordDiv.innerHTML = `<b>${item.word}</b>`;
-    wordDiv.addEventListener('click', () => showDefinition(index));
-    wordListDiv.appendChild(wordDiv);
-  });
+  if (selectedWeek) {
+    currentWords = wordData[selectedWeek];
+
+    // Clear the current word list and display the words for the selected week
+    wordListDiv.innerHTML = '';
+    currentWords.forEach((item, index) => {
+      const wordDiv = document.createElement('div');
+      wordDiv.classList.add('word-item');
+      wordDiv.id = `word-${index}`;
+      wordDiv.innerHTML = `<b>${item.word}</b>`;
+      wordDiv.addEventListener('click', () => showDefinition(index));
+      wordListDiv.appendChild(wordDiv);
+    });
+  } else {
+    wordListDiv.innerHTML = 'Please select a week to display the words.';
+  }
 }
 
 // Show definition of the highlighted word and read it aloud
@@ -67,18 +77,22 @@ function showDefinition(index) {
   // Use speech synthesis to say the word, spell it, and say it again
   const synth = window.speechSynthesis;
 
-  // Say the word
+  // Say the word (in British English)
   const wordUtterance = new SpeechSynthesisUtterance(word);
+  wordUtterance.lang = 'en-GB';  // Set the language to British English
   synth.speak(wordUtterance);
 
   wordUtterance.onend = function () {
-    // Spell the word
+    // Spell the word (slow down the pace by adjusting the rate)
     const spellUtterance = new SpeechSynthesisUtterance(`Spelling: ${word.split('').join(' ')}`);
+    spellUtterance.lang = 'en-GB';  // Set the language to British English
+    spellUtterance.rate = 0.7;      // Slow down the pace
     synth.speak(spellUtterance);
 
     spellUtterance.onend = function () {
       // Repeat the word
       const repeatUtterance = new SpeechSynthesisUtterance(word);
+      repeatUtterance.lang = 'en-GB';  // Set the language to British English
       synth.speak(repeatUtterance);
     };
   };
@@ -97,18 +111,25 @@ function readWordList() {
       wordDiv.classList.add('highlighted');
       definitionText.innerHTML = `<strong>${word}:</strong> ${wordMeaning}`;
 
-      // Text-to-Speech
+      // Text-to-Speech (say the word)
       const synth = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(`The word is ${word}`);
+      utterance.lang = 'en-GB';  // Set the language to British English
       synth.speak(utterance);
+
       utterance.onend = function () {
-        // Spell the word
+        // Spell the word (slow down the pace)
         const spellUtterance = new SpeechSynthesisUtterance(`Spelling: ${word.split('').join(' ')}`);
+        spellUtterance.lang = 'en-GB';  // Set the language to British English
+        spellUtterance.rate = 0.7;      // Slow down the pace
         synth.speak(spellUtterance);
+
         spellUtterance.onend = function () {
           // Repeat the word
           const repeatUtterance = new SpeechSynthesisUtterance(word);
+          repeatUtterance.lang = 'en-GB';  // Set the language to British English
           synth.speak(repeatUtterance);
+
           repeatUtterance.onend = function () {
             // Move to the next word
             wordDiv.classList.remove('highlighted');
@@ -136,6 +157,7 @@ function startSpellingTest(isRandom = false) {
   // Announce the test
   const synth = window.speechSynthesis;
   const testAnnounce = new SpeechSynthesisUtterance("The test is about to begin.");
+  testAnnounce.lang = 'en-GB';  // Set the language to British English
   synth.speak(testAnnounce);
   
   testAnnounce.onend = function () {
@@ -145,6 +167,7 @@ function startSpellingTest(isRandom = false) {
 
         // Speak the word and ask user to spell it
         const wordUtterance = new SpeechSynthesisUtterance(`Please spell the word ${word}`);
+        wordUtterance.lang = 'en-GB';  // Set the language to British English
         synth.speak(wordUtterance);
 
         // Start speech recognition
@@ -198,10 +221,10 @@ function showScore(correctAnswers) {
 }
 
 // Event listeners
-weekSelector.addEventListener('change', loadWords);
-readWordsBtn.addEventListener('click', readWordList);
-testInOrderBtn.addEventListener('click', () => startSpellingTest(false));
-testRandomBtn.addEventListener('click', () => startSpellingTest(true));
+weekSelector.addEventListener('change', loadWords);  // Load words when week changes
+readWordsBtn.addEventListener('click', readWordList); // Read the words aloud
+testInOrderBtn.addEventListener('click', () => startSpellingTest(false));  // Test in order
+testRandomBtn.addEventListener('click', () => startSpellingTest(true));  // Test randomly
 
 // Initialize the app
 
