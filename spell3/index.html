@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Practice App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #wordDisplay {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #inputField {
+            padding: 10px;
+            font-size: 18px;
+            width: 300px;
+        }
+        .progress {
+            margin-top: 20px;
+        }
+        .week-select {
+            margin-bottom: 20px;
+        }
+        #wordList {
+            margin-top: 30px;
+        }
+        #wordList li {
+            font-size: 18px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        #wordList li.highlight {
+            background-color: #d0f8d0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spelling Practice App</h1>
+
+    <div class="week-select">
+        <label for="weekSelect">Select Week: </label>
+        <select id="weekSelect">
+            <option value="1">Week 1</option>
+            <option value="2">Week 2</option>
+            <option value="3">Week 3</option>
+            <option value="4">Week 4</option>
+            <option value="5">Week 5</option>
+            <option value="6">Week 6</option>
+            <option value="7">Week 7</option>
+            <option value="8">Week 8</option>
+            <option value="9">Week 9</option>
+            <option value="10">Week 10</option>
+        </select>
+        <button class="button" onclick="loadWords()">Load Words</button>
+    </div>
+
+    <div id="wordList"></div>
+
+    <div>
+        <button class="button" onclick="startSpellingTest()">Start Test</button>
+        <button class="button" onclick="getRandomWord()">Show Random Word</button>
+    </div>
+
+    <div class="progress">
+        <p>Correct Spelling: <span id="correctCount">0</span></p>
+        <p>Incorrect Spelling: <span id="incorrectCount">0</span></p>
+    </div>
+
+    <div>
+        <label for="inputField">Type the word:</label>
+        <input type="text" id="inputField" placeholder="Type here..." />
+        <button class="button" onclick="checkSpelling()">Check Spelling</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
