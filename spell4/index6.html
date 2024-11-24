@@ -118,7 +118,7 @@
         const testRandomButton = document.getElementById('test-random-button');
         const endTestButton = document.getElementById('end-test-button');
         let wordListData = [];
-        let testInProgress = false;  // Flag to control whether the test or training is active
+        let isReading = false;  // Flag to track if reading/spelling is in progress
         let correctWords = [];
         let incorrectWords = [];
 
@@ -166,9 +166,10 @@
                 wordElement.dataset.definition = wordData.definition;
                 wordListContainer.appendChild(wordElement);
 
-                // Add click listener to each word item (only if not in test mode)
+                // Add click listener to each word item
                 wordElement.addEventListener('click', () => {
-                    if (!testInProgress) {
+                    if (!isReading) {  // Only allow clicking if a word is not being read/spelled
+                        isReading = true;  // Set the flag to prevent other selections
                         highlightWord(wordElement);
                         showDefinition(wordElement);
                         speakWord(wordElement.dataset.word);
@@ -188,17 +189,29 @@
         function speakWord(word) {
             const utterance = new SpeechSynthesisUtterance(word);
             speechSynthesis.speak(utterance);
+            utterance.onend = () => {  // Once speaking ends, allow the next word selection
+                isReading = false;
+            };
         }
 
         // Function to spell a word
         function spellWord(word) {
             const letters = word.split('');
-            letters.forEach((letter, index) => {
-                setTimeout(() => {
-                    const utterance = new SpeechSynthesisUtterance(letter);
+            let letterIndex = 0;
+
+            function spellNextLetter() {
+                if (letterIndex < letters.length) {
+                    const utterance = new SpeechSynthesisUtterance(letters[letterIndex]);
                     speechSynthesis.speak(utterance);
-                }, index * 500);
-            });
+                    letterIndex++;
+                    setTimeout(spellNextLetter, 500);  // Delay between letters
+                } else {
+                    // After spelling is done, re-enable clicking for other words
+                    isReading = false;
+                }
+            }
+
+            spellNextLetter();
         }
 
         // Function to highlight the selected word
@@ -217,7 +230,7 @@
         // Function to read all words for the selected week
         function readAllWords() {
             let index = 0;
-            testInProgress = true;  // Disable word selection during training
+            isReading = true;  // Disable word selection during reading
             readAllButton.disabled = true;
             testOrderButton.disabled = true;
             testRandomButton.disabled = true;
@@ -225,7 +238,7 @@
 
             function nextWord() {
                 if (index >= wordListData.length) {
-                    testInProgress = false;  // Re-enable word selection after training
+                    isReading = false;  // Re-enable word selection after reading
                     readAllButton.disabled = false;
                     testOrderButton.disabled = false;
                     testRandomButton.disabled = false;
@@ -268,7 +281,7 @@
             correctWords = [];  // Reset correct words
             incorrectWords = [];  // Reset incorrect words
 
-            testInProgress = true;  // Disable word selection during test
+            isReading = true;  // Disable word selection during test
             readAllButton.disabled = true;
             testOrderButton.disabled = true;
             testRandomButton.disabled = true;
