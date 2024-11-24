@@ -2,7 +2,7 @@
 function getBritishVoice() {
   const synth = window.speechSynthesis;
   const voices = synth.getVoices();
-  
+
   // Try to find a British English voice (e.g., "Google UK English Male" or "Google UK English Female")
   for (let voice of voices) {
     if (voice.lang === 'en-GB') {
@@ -19,7 +19,7 @@ function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-GB';  // Set the language to British English
-  
+
   // Set the voice (ensure British accent is chosen)
   utterance.voice = getBritishVoice();
 
