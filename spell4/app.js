@@ -58,6 +58,7 @@ function startSpellingTest() {
     document.getElementById("wordList").style.display = "none"; // Hide word list
     document.getElementById("inputField").style.display = "block"; // Show input field
     document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("stopTestButton").style.display = "inline-block"; // Show stop test button
 
     currentWordIndex = 0;
     runTest();
@@ -70,6 +71,7 @@ function startRandomTest() {
     document.getElementById("wordList").style.display = "none"; // Hide word list
     document.getElementById("inputField").style.display = "block"; // Show input field
     document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("stopTestButton").style.display = "inline-block"; // Show stop test button
 
     // Shuffle the words for random order
     currentWeekWords = shuffleArray(currentWeekWords);
@@ -105,43 +107,9 @@ function askToSpell(wordObj) {
     const resultElement = document.getElementById("result");
     resultElement.innerHTML = `How do you spell "${wordObj.word}"?`;
 
-    // Read out the word and spell it
-    speakWord(wordObj.word);
-    spellWord(wordObj.word);
-}
-
-// Speak the word out loud
-function speakWord(word) {
-    const speech = new SpeechSynthesisUtterance(word);
-    window.speechSynthesis.speak(speech);
-    speech.onend = function() {
-        setTimeout(() => spellWord(word), 500);  // After speaking the word, spell it out
-    };
-}
-
-// Spell the word out loud
-function spellWord(word) {
-    const letters = word.split('');
-    let index = 0;
-
-    const spellInterval = setInterval(() => {
-        if (index < letters.length) {
-            const speech = new SpeechSynthesisUtterance(letters[index]);
-            window.speechSynthesis.speak(speech);
-            index++;
-        } else {
-            clearInterval(spellInterval);
-            setTimeout(() => askToRespond(), 500);  // After spelling out, ask for response
-        }
-    }, 700);
-}
-
-// Ask the child to respond with their spelling
-function askToRespond() {
-    const resultElement = document.getElementById("result");
-    resultElement.innerHTML = "Please spell the word aloud!";
+    // Start speech recognition to capture the user's response
     recognition.start();
-    
+
     recognition.onresult = (event) => {
         const spokenWord = event.results[0][0].transcript.trim().toLowerCase();
         document.getElementById("inputField").value = spokenWord; // Display spoken word
@@ -166,52 +134,5 @@ function checkSpelling(spokenWord) {
     } else {
         incorrectCount++;
         resultElement.innerHTML = `<span style="color: red;">Incorrect! The correct word was ${correctWord}.</span>`;
-        document.getElementById("incorrectCount").textContent = incorrectCount;
-    }
-
-    setTimeout(() => {
-        currentWordIndex++;
-        runTest();
-    }, 2000);
-}
-
-// End the test and show final results
-function endTest() {
-    testRunning = false;
-    document.getElementById("result").innerHTML = `Test complete! Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
-
-    // Verbal feedback
-    const feedbackSpeech = new SpeechSynthesisUtterance(`Well done! You got ${correctCount} out of ${currentWeekWords.length}.`);
-    window.speechSynthesis.speak(feedbackSpeech);
-
-    setTimeout(() => {
-        document.getElementById("wordList").style.display = "block"; // Show the word list again
-        document.getElementById("inputField").style.display = "none"; // Hide input field
-    }, 3000);
-}
-
-// Stop the test and return to the list
-function stopTest() {
-    testRunning = false;
-    document.getElementById("wordList").style.display = "block"; // Show the word list again
-    document.getElementById("inputField").style.display = "none"; // Hide input field
-    document.getElementById("result").style.display = "none"; // Hide result box
-    recognition.stop();
-}
-
-// Read through the entire list of words aloud
-function readListAloud() {
-    let index = 0;
-    
-    const readNextWord = () => {
-        if (index < currentWeekWords.length) {
-            const wordObj = currentWeekWords[index];
-            speakWord(wordObj.word);
-            spellWord(wordObj.word);
-            index++;
-        }
-    };
-
-    readNextWord();
-}
+        document.get
 
