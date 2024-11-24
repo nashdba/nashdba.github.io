@@ -19,6 +19,7 @@ const readWordsBtn = document.getElementById('readWordsBtn');
 const testInOrderBtn = document.getElementById('testInOrderBtn');
 const testRandomBtn = document.getElementById('testRandomBtn');
 const scoreDiv = document.getElementById('score');
+const definitionText = document.getElementById('definitionText');
 
 let currentWords = [];
 
@@ -34,9 +35,30 @@ function loadWords() {
   wordListDiv.innerHTML = '';
   currentWords.forEach((item, index) => {
     const wordDiv = document.createElement('div');
+    wordDiv.classList.add('word-item');
     wordDiv.id = `word-${index}`;
-    wordDiv.innerHTML = `<b>${item.word}</b>: ${item.meaning}`;
+    wordDiv.innerHTML = `<b>${item.word}</b>`;
+    wordDiv.addEventListener('click', () => showDefinition(index));
     wordListDiv.appendChild(wordDiv);
+  });
+}
+
+// Show definition of the highlighted word
+function showDefinition(index) {
+  const word = currentWords[index].word;
+  const meaning = currentWords[index].meaning;
+  definitionText.innerHTML = `<strong>${word}:</strong> ${meaning}`;
+
+  // Highlight the clicked word
+  const wordDiv = document.getElementById(`word-${index}`);
+  wordDiv.classList.add('highlighted');
+
+  // Remove highlight from other words
+  const otherWords = document.querySelectorAll('.word-item');
+  otherWords.forEach((div) => {
+    if (div !== wordDiv) {
+      div.classList.remove('highlighted');
+    }
   });
 }
 
@@ -51,7 +73,7 @@ function readWordList() {
       // Highlight the word and show meaning
       const wordDiv = document.getElementById(`word-${index}`);
       wordDiv.classList.add('highlighted');
-      wordListDiv.innerHTML += `<p><b>${word}:</b> ${wordMeaning}</p>`;
+      definitionText.innerHTML = `<strong>${word}:</strong> ${wordMeaning}`;
 
       // Text-to-Speech
       const synth = window.speechSynthesis;
@@ -160,5 +182,4 @@ testInOrderBtn.addEventListener('click', () => startSpellingTest(false));
 testRandomBtn.addEventListener('click', () => startSpellingTest(true));
 
 // Initialize the app
-// The data will be loaded asynchronously, so no immediate call to loadWords
 
