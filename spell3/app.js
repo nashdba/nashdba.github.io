@@ -3,7 +3,6 @@ let currentWordIndex = 0;
 let correctCount = 0;
 let incorrectCount = 0;
 let currentWeekWords = [];
-let timer;  // To store the countdown timer
 let testRunning = false;  // To track if a test is running
 let currentWordTimer; // Timer for each word
 
@@ -52,13 +51,15 @@ function displayWordList() {
 function startSpellingTest() {
     testRunning = true;
     document.getElementById("wordList").style.display = "none"; // Hide the word list
-    document.getElementById("wordDisplay").style.display = "none"; // Hide current word display
+    document.getElementById("inputField").style.display = "block"; // Show input field
+    document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("wordDisplay").style.display = "block"; // Show current word display
 
     correctCount = 0;
     incorrectCount = 0;
     document.getElementById("correctCount").textContent = correctCount;
     document.getElementById("incorrectCount").textContent = incorrectCount;
-    
+
     currentWordIndex = 0;
     runTest();
 }
@@ -67,7 +68,9 @@ function startSpellingTest() {
 function startRandomTest() {
     testRunning = true;
     document.getElementById("wordList").style.display = "none"; // Hide the word list
-    document.getElementById("wordDisplay").style.display = "none"; // Hide current word display
+    document.getElementById("inputField").style.display = "block"; // Show input field
+    document.getElementById("result").style.display = "block"; // Show result box
+    document.getElementById("wordDisplay").style.display = "block"; // Show current word display
 
     correctCount = 0;
     incorrectCount = 0;
@@ -135,7 +138,7 @@ function spellWord(word) {
 function askToSpell() {
     const resultElement = document.getElementById("result");
     resultElement.innerHTML = "Now, spell the word aloud!";
-    
+
     // Start listening for the child's spelling
     recognition.start();
 
@@ -189,5 +192,7 @@ function endTest() {
     document.getElementById("result").innerHTML = `<strong>Test Completed!</strong> Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
     document.getElementById("wordList").style.display = "block"; // Show the word list
     document.getElementById("wordDisplay").style.display = "block"; // Show the word display
+    document.getElementById("inputField").style.display = "none"; // Hide the input field
+    document.getElementById("result").style.display = "none"; // Hide result box
 }
 
