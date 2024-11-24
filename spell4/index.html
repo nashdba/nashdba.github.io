@@ -3,29 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spelling Test App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Word Learning App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 0;
+        }
+        .container {
+            margin: 20px;
+        }
+        .word-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .word-item {
+            padding: 10px;
+            margin: 5px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .word-item:hover {
+            background-color: #bdc3c7;
+        }
+        .highlight {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .definition {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+        .button:disabled {
+            background-color: #bdc3c7;
+        }
+    </style>
 </head>
 <body>
-    <h1>Spelling Test App</h1>
 
-    <label for="weekSelector">Select Week: </label>
-    <select id="weekSelector">
-        <option value="week1">Week 1</option>
-        <option value="week2">Week 2</option>
-    </select>
+    <h1>Word Learning App</h1>
 
-    <div id="wordListContainer"></div>
+    <div class="container">
+        <h2>Words of the Week</h2>
+        <ul id="word-list" class="word-list">
+            <!-- Dynamic word list will be inserted here -->
+        </ul>
 
-    <div id="definitionText"></div>
+        <div class="definition" id="word-definition"></div>
 
-    <div id="score"></div>
+        <button id="read-all-button" class="button">Read All Words</button>
+        <button id="test-order-button" class="button">Test in Order</button>
+        <button id="test-random-button" class="button">Test Random</button>
+    </div>
 
-    <button class="btn" id="readWordsBtn">Read Words</button>
-    <button class="btn" id="testInOrderBtn">Test in Order</button>
-    <button class="btn" id="testRandomBtn">Test Random</button>
+    <script>
+        const wordListContainer = document.getElementById('word-list');
+        const wordDefinition = document.getElementById('word-definition');
+        const readAllButton = document.getElementById('read-all-button');
+        const testOrderButton = document.getElementById('test-order-button');
+        const testRandomButton = document.getElementById('test-random-button');
+        let wordListData = [];
 
-    <script src="script.js"></script>
+        // Fetch word data from external JSON file
+        fetch('terms/terms.json')
+            .then(response => response.json())
+            .then(data => {
+                wordListData = data;
+                displayWords();
+            })
+            .catch(error => {
+                console.error('Error loading the word list:', error);
+                alert('There was an error loading the word list.');
+            });
+
+        // Display the word list from JSON data
+        function displayWords() {
+            wordListContainer.innerHTML = ''; // Clear previous list
+            wordListData.forEach(wordData => {
+                const wordElement = document.createElement('li');
+                wordElement.classList.add('word-item');
+                wordElement.textContent = wordData.word;
+                wordElement.dataset.word = wordData.word;
+                wordElement.dataset.definition = wordData.definition;
+                wordListContainer.appendChild(wordElement);
+
+                // Add click listener to each word item
+                wordElement.addEventListener('click', () => {
+                    highlightWord(wordElement);
+                    showDefinition(wordElement);
+                    speakWord(wordElement.dataset.word);
+                    spellWord(wordElement.dataset.word);
+                    speakWord(wordElement.dataset.word);
+                });
+            });
+        }
+
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            speechSynthesis.speak(utterance);
+        }
+
+        function spellWord(word) {
+            const letters = word.split('');
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(letter);
+                    speechSynthesis.speak(utterance);
+                }, index * 500);
+            });
+        }
+
+        function highlightWord(wordElement) {
+            const wordItems = document.querySelectorAll('.word-item');
+            wordItems.forEach(item => item.classList.remove('highlight'));
+            wordElement.classList.add('highlight');
+        }
+
+        function showDefinition(wordElement) {
+            wordDefinition.textContent = wordElement.dataset.definition;
+        }
+
+        function readAllWords() {
+            let index = 0;
+            readAllButton.disabled = true;
+            testOrderButton.disabled = true;
+            testRandomButton.disabled = true;
+
+            function nextWord() {
+                if (index >= wordListData.length) {
+                    readAllButton.disabled = false;
+                    testOrderButton.disabled = false;
+                    testRandomButton.disabled = false;
+                    return;
+                }
+
+                const wordData = wordListData[index];
+                const wordElement = document.querySelector(`[data-word="${wordData.word}"]`);
+                highlightWord(wordElement);
+                showDefinition(wordElement);
+                speakWord(wordData.word);
+                spellWord(wordData.word);
+                speakWord(wordData.word);
+
+                index++;
+                setTimeout(nextWord, 3000); // Delay between words
+            }
+            nextWord();
+        }
+
+        readAllButton.addEventListener('click', readAllWords);
+
+        // Add speech recognition for testing
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        function startTest(isRandom) {
+            let wordsToTest = [...wordListData];
+            if (isRandom) {
+                wordsToTest = wordsToTest.sort(() => Math.random() - 0.5);
+            }
+            let score = 0;
+            let currentTestIndex = 0;
+
+            function askForSpelling() {
+                if (currentTestIndex >= wordsToTest.length) {
+                    alert(`Test Complete! You scored ${score} out of ${wordsToTest.length}`);
+                    return;
+                }
+
+                const word = wordsToTest[currentTestIndex].word;
+                speakWord(word);
+                setTimeout(() => {
+                    // Start speech recognition
+                    recognition.start();
+
+                    recognition.onresult = function(event) {
+                        const userSpelling = event.results[0][0].transcript.trim().toLowerCase();
+                        if (userSpelling === word.toLowerCase()) {
+                            score++;
+                            alert("Correct!");
+                        } else {
+                            alert(`Incorrect. The correct spelling is: ${word}`);
+                        }
+                        currentTestIndex++;
+                        askForSpelling();
+                    };
+
+                    recognition.onerror = function(event) {
+                        alert("Sorry, I couldn't understand your spelling. Please try again.");
+                        recognition.stop();
+                    };
+                }, 1000);
+            }
+
+            speakWord('The test is about to begin.');
+            setTimeout(askForSpelling, 2000);
+        }
+
+        testOrderButton.addEventListener('click', () => startTest(false));
+        testRandomButton.addEventListener('click', () => startTest(true));
+
+    </script>
+
 </body>
 </html>
 
