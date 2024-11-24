@@ -45,15 +45,23 @@ function loadWords() {
   });
 }
 
+// Function to get a British English voice
+function getBritishVoice() {
+  const synth = window.speechSynthesis;
+  const voices = synth.getVoices();
+
+  // Try to find a British English voice (e.g., "Google UK English Male" or "Google UK English Female")
+  return voices.find(voice => voice.lang === 'en-GB') || voices[0];  // Default to the first available voice if none found
+}
+
 // Function to speak the word (say word, spell it, then say word again)
 function speakWord(word, meaning) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance();
   utterance.lang = 'en-GB'; // Set the language to British English
 
-  // Select British English voice
-  const voices = synth.getVoices();
-  utterance.voice = voices.find(voice => voice.lang === 'en-GB') || voices[0];
+  // Set the voice to a British English voice
+  utterance.voice = getBritishVoice();
 
   // Speak the word
   utterance.text = `The word is ${word}`;
@@ -115,10 +123,10 @@ function startSpellingTest(isRandom) {
     recognition.start();
 
     recognition.onresult = function (event) {
-      const userAnswer = event.results[0][0].transcript.toLowerCase();
+      const userAnswer = event.results[0][0].transcript.trim().toLowerCase();
       console.log('User said:', userAnswer);
 
-      if (userAnswer === correctWord) {
+      if (userAnswer === correctWord.toLowerCase()) {
         score++;
         showCorrectAnswer(currentWordIndex, true);
       } else {
@@ -154,8 +162,8 @@ function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-GB'; // British English
-  utterance.voice = synth.getVoices().find(voice => voice.lang === 'en-GB') || synth.getVoices()[0];
-  utterance.rate = rate; // Slow rate if needed
+  utterance.voice = getBritishVoice(); // Set voice to British English
+  utterance.rate = rate; // Slow down the rate of speech for better comprehension
   synth.speak(utterance);
 }
 
