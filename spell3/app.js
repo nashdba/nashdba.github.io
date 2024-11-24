@@ -1,32 +1,29 @@
-let wordsData = [];  // Holds the word lists for each term
+let wordsData = [];  // Holds the words for each week
+let currentWeekWords = [];
 let currentWordIndex = 0;
 let correctCount = 0;
 let incorrectCount = 0;
-let currentWeekWords = [];
-let testRunning = false;  // To track if a test is running
+let testRunning = false;  // Track if test is running
 let currentWordTimer; // Timer for each word
 
 // Initialize speech recognition
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'en-US';  // Set the language for recognition
-recognition.continuous = false; // Don't listen continuously
-recognition.interimResults = false; // Only return final results
+recognition.lang = 'en-US';
+recognition.continuous = false;
+recognition.interimResults = false;
 
 // Load words data from a JSON file
 async function loadWords() {
     const weekNumber = document.getElementById("weekSelect").value;
     
     // Load the JSON file for the selected term
-    let termFile = `terms/term1.json`;  // Default to term 1
-    if (weekNumber > 5) {
-        termFile = `terms/term2.json`; // Load term 2 for weeks 6-10
-    }
+    const termFile = `terms/terms.json`;  // Assuming the JSON file is called terms.json
 
     try {
         const response = await fetch(termFile);
         const data = await response.json();
         wordsData = data;
-        currentWeekWords = wordsData[`week${weekNumber}`]; // Set words for the selected week
+        currentWeekWords = wordsData[`week${weekNumber}`];
         currentWordIndex = 0;
         displayWordList();
     } catch (error) {
@@ -34,7 +31,7 @@ async function loadWords() {
     }
 }
 
-// Display all the words for the selected week
+// Display all words for the selected week
 function displayWordList() {
     const wordListContainer = document.getElementById("wordList");
     wordListContainer.innerHTML = '';  // Clear previous list
@@ -47,16 +44,19 @@ function displayWordList() {
     });
 }
 
-// Start the spelling test (in order)
+// Highlight word when clicked
+function highlightWord(index) {
+    const wordItems = document.querySelectorAll('#wordList li');
+    wordItems.forEach(item => item.classList.remove('highlight'));
+    wordItems[index].classList.add('highlight');
+}
+
+// Start the test in order
 function startSpellingTest() {
     testRunning = true;
-    document.getElementById("wordList").style.display = "none"; // Hide the word list
+    document.getElementById("wordList").style.display = "none"; // Hide word list
     document.getElementById("inputField").style.display = "block"; // Show input field
     document.getElementById("result").style.display = "block"; // Show result box
-    document.getElementById("wordDisplay").style.display = "block"; // Show current word display
-
-    correctCount = 0;
-    incorrectCount = 0;
     document.getElementById("correctCount").textContent = correctCount;
     document.getElementById("incorrectCount").textContent = incorrectCount;
 
@@ -64,16 +64,12 @@ function startSpellingTest() {
     runTest();
 }
 
-// Start the spelling test (random order)
+// Start the test in random order
 function startRandomTest() {
     testRunning = true;
-    document.getElementById("wordList").style.display = "none"; // Hide the word list
+    document.getElementById("wordList").style.display = "none"; // Hide word list
     document.getElementById("inputField").style.display = "block"; // Show input field
     document.getElementById("result").style.display = "block"; // Show result box
-    document.getElementById("wordDisplay").style.display = "block"; // Show current word display
-
-    correctCount = 0;
-    incorrectCount = 0;
     document.getElementById("correctCount").textContent = correctCount;
     document.getElementById("incorrectCount").textContent = incorrectCount;
 
@@ -83,7 +79,7 @@ function startRandomTest() {
     runTest();
 }
 
-// Shuffle the words array to get a random order
+// Shuffle array function to randomize word order
 function shuffleArray(arr) {
     return arr.sort(() => Math.random() - 0.5);
 }
@@ -92,36 +88,36 @@ function shuffleArray(arr) {
 function runTest() {
     if (currentWordIndex < currentWeekWords.length) {
         const wordObj = currentWeekWords[currentWordIndex];
-        displayWord(wordObj);
-        setTimer();
+        askToSpell(wordObj);
     } else {
         endTest();
     }
 }
 
-// Display the current word and start speech recognition
-function displayWord(wordObj) {
-    const wordDisplay = document.getElementById("wordDisplay");
-    wordDisplay.innerHTML = `Spell the word: <strong>${wordObj.word}</strong>`;
-    
-    // Use speech synthesis to read out the word
+// Ask the child to spell the word
+function askToSpell(wordObj) {
+    const wordDisplay = document.getElementById("wordList");
+    wordDisplay.style.display = "none"; // Hide list during test
+
+    // Read out the word and spell it
     speakWord(wordObj.word);
+    spellWord(wordObj.word);
 }
 
-// Use the SpeechSynthesis API to read out the word
+// Speak the word out loud
 function speakWord(word) {
     const speech = new SpeechSynthesisUtterance(word);
     window.speechSynthesis.speak(speech);
-    
-    // Spell out the word
-    spellWord(word);
+    speech.onend = function() {
+        setTimeout(() => spellWord(word), 500);  // After speaking the word, spell it out
+    };
 }
 
-// Spell the word aloud letter by letter
+// Spell the word out loud
 function spellWord(word) {
     const letters = word.split('');
     let index = 0;
-    
+
     const spellInterval = setInterval(() => {
         if (index < letters.length) {
             const speech = new SpeechSynthesisUtterance(letters[index]);
@@ -129,70 +125,55 @@ function spellWord(word) {
             index++;
         } else {
             clearInterval(spellInterval);
-            setTimeout(() => askToSpell(), 500); // After spelling out, ask the child to spell it
+            setTimeout(() => askToRespond(), 500);  // After spelling out, ask for response
         }
     }, 700);
 }
 
-// Ask the child to spell the word (via voice)
-function askToSpell() {
+// Ask the child to respond with their spelling
+function askToRespond() {
     const resultElement = document.getElementById("result");
-    resultElement.innerHTML = "Now, spell the word aloud!";
-
-    // Start listening for the child's spelling
+    resultElement.innerHTML = "Please spell the word aloud!";
     recognition.start();
-
+    
     recognition.onresult = (event) => {
         const spokenWord = event.results[0][0].transcript.trim().toLowerCase();
-        document.getElementById("inputField").value = spokenWord;  // Fill the text box with spoken word
-        checkSpelling(spokenWord);  // Check if the spoken word matches
+        document.getElementById("inputField").value = spokenWord; // Display spoken word
+        checkSpelling(spokenWord);
     };
 
     recognition.onerror = (event) => {
         console.error("Error with speech recognition:", event);
-        document.getElementById("result").innerHTML = "Sorry, I couldn't understand that. Please try again!";
+        document.getElementById("result").innerHTML = "Sorry, I couldn't hear you. Try again.";
     };
 }
 
-// Check if the word typed or spoken matches
+// Check the spelling of the word
 function checkSpelling(spokenWord) {
     const correctWord = currentWeekWords[currentWordIndex].word.toLowerCase();
     const resultElement = document.getElementById("result");
     
     if (spokenWord === correctWord) {
         correctCount++;
-        resultElement.innerHTML = `<span style="color: green;">Correct! You spelled the word correctly.</span>`;
+        resultElement.innerHTML = `<span style="color: green;">Correct!</span>`;
         document.getElementById("correctCount").textContent = correctCount;
     } else {
         incorrectCount++;
-        resultElement.innerHTML = `<span style="color: red;">Incorrect! Try again.</span>`;
+        resultElement.innerHTML = `<span style="color: red;">Incorrect! The correct word was ${correctWord}.</span>`;
         document.getElementById("incorrectCount").textContent = incorrectCount;
     }
 
-    // Move to next word after a short delay
     setTimeout(() => {
         currentWordIndex++;
         runTest();
     }, 2000);
 }
 
-// Set a 15-second timer for the current word
-function setTimer() {
-    clearTimeout(currentWordTimer);
-    currentWordTimer = setTimeout(() => {
-        document.getElementById("result").innerHTML = "Time's up! Moving to next word.";
-        currentWordIndex++;
-        runTest();
-    }, 15000); // 15 seconds to spell
-}
-
-// End the test and show results
+// End the test and show final results
 function endTest() {
     testRunning = false;
-    document.getElementById("result").innerHTML = `<strong>Test Completed!</strong> Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
-    document.getElementById("wordList").style.display = "block"; // Show the word list
-    document.getElementById("wordDisplay").style.display = "block"; // Show the word display
-    document.getElementById("inputField").style.display = "none"; // Hide the input field
-    document.getElementById("result").style.display = "none"; // Hide result box
+    document.getElementById("result").innerHTML = `Test complete! Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
+    document.getElementById("wordList").style.display = "block"; // Show the word list again
+    document.getElementById("inputField").style.display = "none"; // Hide input field
 }
 

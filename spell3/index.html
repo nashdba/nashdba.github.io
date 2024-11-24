@@ -15,9 +15,16 @@
         h1 {
             color: #4CAF50;
         }
-        #wordDisplay {
-            font-size: 24px;
+        #wordList {
             margin-top: 20px;
+        }
+        #wordList li {
+            font-size: 18px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        #wordList li.highlight {
+            background-color: #d0f8d0;
         }
         .button {
             background-color: #4CAF50;
@@ -43,26 +50,12 @@
         .progress {
             margin-top: 20px;
         }
-        .week-select {
-            margin-bottom: 20px;
-        }
-        #wordList {
-            margin-top: 30px;
-        }
-        #wordList li {
-            font-size: 18px;
-            padding: 5px;
-            cursor: pointer;
-        }
-        #wordList li.highlight {
-            background-color: #d0f8d0;
-        }
     </style>
 </head>
 <body>
     <h1>Spelling Practice App</h1>
 
-    <div class="week-select">
+    <div>
         <label for="weekSelect">Select Week: </label>
         <select id="weekSelect">
             <option value="1">Week 1</option>
@@ -83,7 +76,7 @@
 
     <div>
         <button class="button" onclick="startSpellingTest()">Start Test</button>
-        <button class="button" onclick="startRandomTest()">Show Random Word</button>
+        <button class="button" onclick="startRandomTest()">Start Random Test</button>
     </div>
 
     <div class="progress">
@@ -92,9 +85,8 @@
     </div>
 
     <div>
-        <label for="inputField">Type the word:</label>
-        <input type="text" id="inputField" placeholder="Type here..." />
-        <button class="button" onclick="checkSpelling()">Check Spelling</button>
+        <label for="inputField">Your Answer:</label>
+        <input type="text" id="inputField" placeholder="Your answer here..." />
     </div>
 
     <div id="result"></div>
