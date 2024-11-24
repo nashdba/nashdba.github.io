@@ -1,3 +1,34 @@
+// Function to get a British English voice from available voices
+function getBritishVoice() {
+  const synth = window.speechSynthesis;
+  const voices = synth.getVoices();
+  
+  // Try to find a British English voice (e.g., "Google UK English Male" or "Google UK English Female")
+  for (let voice of voices) {
+    if (voice.lang === 'en-GB') {
+      return voice;
+    }
+  }
+
+  // Fallback if no British voice is found (using the default voice)
+  return voices[0];  // This should typically be a British English voice
+}
+
+// Function to speak text with slow rate
+function speakText(text, rate = 1) {
+  const synth = window.speechSynthesis;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-GB';  // Set the language to British English
+  
+  // Set the voice (ensure British accent is chosen)
+  utterance.voice = getBritishVoice();
+
+  // Adjust the speed of the speech
+  utterance.rate = rate;  // Lower rate for slower speech
+
+  synth.speak(utterance);
+}
+
 // Function to test spelling in order or randomly
 function startSpellingTest(isRandom = false) {
   let wordsToTest = [...currentWords];
@@ -9,78 +40,102 @@ function startSpellingTest(isRandom = false) {
   let score = 0;
 
   // Announce the test
-  const synth = window.speechSynthesis;
-  const testAnnounce = new SpeechSynthesisUtterance("The test is about to begin.");
-  testAnnounce.lang = 'en-GB';  // Set the language to British English
-  synth.speak(testAnnounce);
+  speakText("The test is about to begin.", 1); // Normal speech rate
 
-  testAnnounce.onend = function () {
-    function askWord() {
-      if (currentWordIndex < wordsToTest.length) {
-        const word = wordsToTest[currentWordIndex].word;
+  function askWord() {
+    if (currentWordIndex < wordsToTest.length) {
+      const word = wordsToTest[currentWordIndex].word;
 
-        // Speak the word and ask user to spell it
-        const wordUtterance = new SpeechSynthesisUtterance(`Please spell the word ${word}`);
-        wordUtterance.lang = 'en-GB';  // Set the language to British English
-        synth.speak(wordUtterance);
+      // Speak the word and ask user to spell it
+      speakText(`Please spell the word ${word}`, 1); // Normal speech rate
 
-        wordUtterance.onend = function () {
-          // Start speech recognition after speaking the word
-          recognizeSpelling(word);
-        };
+      // After speaking the word, start speech recognition
+      recognizeSpelling(word);
+    } else {
+      // End test and show score
+      showScore(score);
+    }
+  }
+
+  function recognizeSpelling(correctWord) {
+    // Initialize SpeechRecognition if not already initialized
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-GB';  // Set the language to British English
+    recognition.continuous = false;  // Stops after one result
+    recognition.interimResults = false; // No interim results, only final answer
+
+    // Start listening for the user's input
+    recognition.start();
+
+    recognition.onresult = function (event) {
+      const userAnswer = event.results[0][0].transcript.toLowerCase();
+      console.log('User said:', userAnswer);
+
+      // Check if the answer is correct
+      if (userAnswer === correctWord) {
+        score++;
+        showCorrectAnswer(currentWordIndex, true);
       } else {
-        // End test and show score
-        showScore(score);
+        showCorrectAnswer(currentWordIndex, false);
       }
+
+      // Move to the next word
+      currentWordIndex++;
+      askWord();
+    };
+
+    recognition.onerror = function (event) {
+      console.error("Recognition error: ", event.error);
+      alert("Sorry, I couldn't understand that. Please try again.");
+      recognition.stop();  // Stop recognition if there's an error
+    };
+  }
+
+  function showCorrectAnswer(index, isCorrect) {
+    const wordDiv = document.getElementById(`word-${index}`);
+    if (isCorrect) {
+      wordDiv.classList.add('correct');
+      wordDiv.classList.remove('incorrect');
+    } else {
+      wordDiv.classList.add('incorrect');
+      wordDiv.classList.remove('correct');
     }
+  }
 
-    function recognizeSpelling(correctWord) {
-      // Initialize SpeechRecognition if not already initialized
-      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      recognition.lang = 'en-GB';  // Set the language to British English
-      recognition.continuous = false;  // Stops after one result
-      recognition.interimResults = false; // No interim results, only final answer
+  askWord();  // Start asking the first word
+}
 
-      // Start listening for the user's input
-      recognition.start();
+// Function to read the words aloud in the list
+function readWordList() {
+  let index = 0;
 
-      recognition.onresult = function (event) {
-        const userAnswer = event.results[0][0].transcript.toLowerCase();
-        console.log('User said:', userAnswer);
+  function speakNextWord() {
+    if (index < currentWords.length) {
+      const word = currentWords[index].word;
+      const wordMeaning = currentWords[index].meaning;
 
-        // Check if the answer is correct
-        if (userAnswer === correctWord) {
-          score++;
-          showCorrectAnswer(currentWordIndex, true);
-        } else {
-          showCorrectAnswer(currentWordIndex, false);
-        }
-        
-        // Move to the next word
-        currentWordIndex++;
-        askWord();
-      };
-
-      recognition.onerror = function (event) {
-        console.error("Recognition error: ", event.error);
-        alert("Sorry, I couldn't understand that. Please try again.");
-        recognition.stop();  // Stop recognition if there's an error
-      };
-    }
-
-    function showCorrectAnswer(index, isCorrect) {
+      // Highlight the word and show meaning
       const wordDiv = document.getElementById(`word-${index}`);
-      if (isCorrect) {
-        wordDiv.classList.add('correct');
-        wordDiv.classList.remove('incorrect');
-      } else {
-        wordDiv.classList.add('incorrect');
-        wordDiv.classList.remove('correct');
-      }
-    }
+      wordDiv.classList.add('highlighted');
+      definitionText.innerHTML = `<strong>${word}:</strong> ${wordMeaning}`;
 
-    askWord();  // Start asking the first word
-  };
+      // Text-to-Speech (say the word)
+      speakText(`The word is ${word}`, 1); // Normal speech rate
+
+      // Slow down the spelling process
+      speakText(`Spelling: ${word.split('').join(' ')}`, 0.7);  // Slow down the pace
+
+      // Repeat the word
+      speakText(word, 1); // Normal speech rate
+
+      // Move to the next word after finishing the current word
+      wordDiv.classList.remove('highlighted');
+      index++;
+      speakNextWord();
+    }
+  }
+
+  speakNextWord();
 }
 
 // Function to show score and feedback
