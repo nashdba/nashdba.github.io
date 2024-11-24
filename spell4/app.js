@@ -134,5 +134,74 @@ function checkSpelling(spokenWord) {
     } else {
         incorrectCount++;
         resultElement.innerHTML = `<span style="color: red;">Incorrect! The correct word was ${correctWord}.</span>`;
-        document.get
+        document.getElementById("incorrectCount").textContent = incorrectCount;
+    }
+
+    currentWordIndex++;
+    setTimeout(runTest, 2000); // Move to the next word after 2 seconds
+}
+
+// End the test and show final results
+function endTest() {
+    testRunning = false;
+    document.getElementById("result").innerHTML = `Test complete! Correct: ${correctCount}, Incorrect: ${incorrectCount}`;
+    
+    // Verbal feedback
+    const feedbackSpeech = new SpeechSynthesisUtterance(`Well done! You got ${correctCount} out of ${currentWeekWords.length}.`);
+    window.speechSynthesis.speak(feedbackSpeech);
+
+    setTimeout(() => {
+        document.getElementById("wordList").style.display = "block"; // Show the word list again
+        document.getElementById("inputField").style.display = "none"; // Hide input field
+    }, 3000);
+}
+
+// Stop the test and return to the list
+function stopTest() {
+    testRunning = false;
+    document.getElementById("wordList").style.display = "block"; // Show the word list again
+    document.getElementById("inputField").style.display = "none"; // Hide input field
+    document.getElementById("result").style.display = "none"; // Hide result box
+    document.getElementById("stopTestButton").style.display = "none"; // Hide stop test button
+    recognition.stop();
+}
+
+// Read the list aloud, highlighting each word
+function readListAloud() {
+    let index = 0;
+    const wordListItems = document.querySelectorAll("#wordList li");
+
+    const readNextWord = () => {
+        if (index < currentWeekWords.length) {
+            const wordObj = currentWeekWords[index];
+            
+            // Highlight the current word in the list
+            wordListItems.forEach(item => item.classList.remove("highlight"));
+            wordListItems[index].classList.add("highlight");
+
+            // Speak the word, then spell it, then repeat the word
+            speakWord(wordObj.word);
+            spellWord(wordObj.word);
+            speakWord(wordObj.word);
+
+            index++; // Move to the next word
+            setTimeout(readNextWord, 4000); // Move to the next word after 4 seconds
+        }
+    };
+
+    readNextWord();
+}
+
+// Function to speak the word
+function speakWord(word) {
+    const utterance = new SpeechSynthesisUtterance(word);
+    window.speechSynthesis.speak(utterance);
+}
+
+// Function to spell out the word aloud
+function spellWord(word) {
+    const letters = word.split('');
+    const spelling = new SpeechSynthesisUtterance(letters.join(" "));
+    window.speechSynthesis.speak(spelling);
+}
 
