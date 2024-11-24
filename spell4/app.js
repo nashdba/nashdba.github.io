@@ -153,6 +153,7 @@ function endTest() {
     setTimeout(() => {
         document.getElementById("wordList").style.display = "block"; // Show the word list again
         document.getElementById("inputField").style.display = "none"; // Hide input field
+        document.getElementById("result").style.display = "none"; // Hide result box
     }, 3000);
 }
 
@@ -179,13 +180,19 @@ function readListAloud() {
             wordListItems.forEach(item => item.classList.remove("highlight"));
             wordListItems[index].classList.add("highlight");
 
+            // Display the word's meaning
+            document.getElementById("wordMeaning").textContent = `Meaning: ${wordObj.meaning}`;
+
             // Speak the word, then spell it, then repeat the word
             speakWord(wordObj.word);
             spellWord(wordObj.word);
             speakWord(wordObj.word);
 
             index++; // Move to the next word
-            setTimeout(readNextWord, 4000); // Move to the next word after 4 seconds
+            setTimeout(readNextWord, 5000); // Move to the next word after 5 seconds
+        } else {
+            // Hide word list and meaning after completion
+            document.getElementById("wordMeaning").textContent = '';
         }
     };
 

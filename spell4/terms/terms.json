@@ -1,47 +1,23 @@
 {
-  "week1": [
-    {
-      "word": "apple",
-      "meaning": "A round fruit with red or green skin and a whitish interior."
-    },
-    {
-      "word": "banana",
-      "meaning": "A long, curved fruit with a yellow skin and soft, sweet flesh."
-    },
-    {
-      "word": "cat",
-      "meaning": "A small domesticated carnivorous mammal with soft fur."
-    },
-    {
-      "word": "dog",
-      "meaning": "A domesticated carnivorous mammal with a long snout."
-    },
-    {
-      "word": "elephant",
-      "meaning": "A large mammal with a trunk, large ears, and tusks."
-    }
-  ],
-  "week2": [
-    {
-      "word": "guitar",
-      "meaning": "A musical instrument with six strings played by plucking or strumming."
-    },
-    {
-      "word": "homework",
-      "meaning": "School assignments to be done outside of class."
-    },
-    {
-      "word": "school",
-      "meaning": "An institution for educating children or others."
-    },
-    {
-      "word": "mountain",
-      "meaning": "A large, natural elevation of the earth's surface."
-    },
-    {
-      "word": "river",
-      "meaning": "A large, flowing body of water that usually empties into an ocean or sea."
-    }
-  ]
+    "week1": [
+        {
+            "word": "apple",
+            "meaning": "A fruit that is typically round and red, green, or yellow in color."
+        },
+        {
+            "word": "ball",
+            "meaning": "A spherical object used in games and sports."
+        }
+    ],
+    "week2": [
+        {
+            "word": "cat",
+            "meaning": "A small domesticated carnivorous mammal with soft fur."
+        },
+        {
+            "word": "dog",
+            "meaning": "A domesticated carnivorous mammal with a barking sound."
+        }
+    ]
 }
 
