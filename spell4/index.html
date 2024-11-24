@@ -56,6 +56,11 @@
         .button:disabled {
             background-color: #bdc3c7;
         }
+        select {
+            padding: 10px;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -63,19 +68,27 @@
     <h1>Word Learning App</h1>
 
     <div class="container">
-        <h2>Words of the Week</h2>
+        <h2>Select Week</h2>
+        <select id="week-selector">
+            <option value="">-- Select Week --</option>
+            <option value="week1">Week 1</option>
+            <option value="week2">Week 2</option>
+        </select>
+
+        <h2>Words of the Selected Week</h2>
         <ul id="word-list" class="word-list">
             <!-- Dynamic word list will be inserted here -->
         </ul>
 
         <div class="definition" id="word-definition"></div>
 
-        <button id="read-all-button" class="button">Read All Words</button>
-        <button id="test-order-button" class="button">Test in Order</button>
-        <button id="test-random-button" class="button">Test Random</button>
+        <button id="read-all-button" class="button" disabled>Read All Words</button>
+        <button id="test-order-button" class="button" disabled>Test in Order</button>
+        <button id="test-random-button" class="button" disabled>Test Random</button>
     </div>
 
     <script>
+        const weekSelector = document.getElementById('week-selector');
         const wordListContainer = document.getElementById('word-list');
         const wordDefinition = document.getElementById('word-definition');
         const readAllButton = document.getElementById('read-all-button');
@@ -87,17 +100,27 @@
         fetch('terms/terms.json')
             .then(response => response.json())
             .then(data => {
-                wordListData = data;
-                displayWords();
+                // Store the word list for all weeks
+                window.allWeeksData = data;
             })
             .catch(error => {
                 console.error('Error loading the word list:', error);
                 alert('There was an error loading the word list.');
             });
 
-        // Display the word list from JSON data
-        function displayWords() {
-            wordListContainer.innerHTML = ''; // Clear previous list
+        // Function to display words based on selected week
+        function displayWords(week) {
+            if (!week || !window.allWeeksData[week]) return;
+
+            // Clear previous list and disable buttons until words are loaded
+            wordListContainer.innerHTML = '';
+            wordDefinition.innerHTML = '';
+            readAllButton.disabled = false;
+            testOrderButton.disabled = false;
+            testRandomButton.disabled = false;
+
+            wordListData = window.allWeeksData[week];
+
             wordListData.forEach(wordData => {
                 const wordElement = document.createElement('li');
                 wordElement.classList.add('word-item');
@@ -117,11 +140,19 @@
             });
         }
 
+        // Event listener for week selection
+        weekSelector.addEventListener('change', (event) => {
+            const selectedWeek = event.target.value;
+            displayWords(selectedWeek);
+        });
+
+        // Function to speak a word
         function speakWord(word) {
             const utterance = new SpeechSynthesisUtterance(word);
             speechSynthesis.speak(utterance);
         }
 
+        // Function to spell a word
         function spellWord(word) {
             const letters = word.split('');
             letters.forEach((letter, index) => {
@@ -132,16 +163,19 @@
             });
         }
 
+        // Function to highlight the selected word
         function highlightWord(wordElement) {
             const wordItems = document.querySelectorAll('.word-item');
             wordItems.forEach(item => item.classList.remove('highlight'));
             wordElement.classList.add('highlight');
         }
 
+        // Function to show the definition of the selected word
         function showDefinition(wordElement) {
             wordDefinition.textContent = wordElement.dataset.definition;
         }
 
+        // Function to read all words for the selected week
         function readAllWords() {
             let index = 0;
             readAllButton.disabled = true;
@@ -178,6 +212,7 @@
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
+        // Function to start the test
         function startTest(isRandom) {
             let wordsToTest = [...wordListData];
             if (isRandom) {
