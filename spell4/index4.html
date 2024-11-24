@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Learning App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 0;
+        }
+        .container {
+            margin: 20px;
+        }
+        .word-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .word-item {
+            padding: 10px;
+            margin: 5px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .word-item:hover {
+            background-color: #bdc3c7;
+        }
+        .highlight {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .definition {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+        .button:disabled {
+            background-color: #bdc3c7;
+        }
+        select {
+            padding: 10px;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        #definition-title {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: left;  /* Left align the text */
+            padding-left: 20px; /* Optional: add some padding to give it space from the left edge */
+        }
+        #word-list {
+            display: block;
+        }
+        #end-test-button {
+            background-color: #e74c3c; /* Red background */
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Word Learning App</h1>
+
+    <div class="container">
+        <h2>Select Week</h2>
+        <select id="week-selector">
+            <option value="">-- Select Week --</option>
+        </select>
+
+        <h2>Words of the Selected Week</h2>
+        <ul id="word-list" class="word-list">
+            <!-- Dynamic word list will be inserted here -->
+        </ul>
+
+        <div id="definition-title">Word Definition:</div>
+        <div class="definition" id="word-definition"></div>
+
+        <button id="read-all-button" class="button" disabled>Read All Words</button>
+        <button id="test-order-button" class="button" disabled>Test in Order</button>
+        <button id="test-random-button" class="button" disabled>Test Random</button>
+        <button id="end-test-button" class="button" style="display:none;" onclick="endTest()">End Test</button>
+    </div>
+
+    <script>
+        const weekSelector = document.getElementById('week-selector');
+        const wordListContainer = document.getElementById('word-list');
+        const wordDefinition = document.getElementById('word-definition');
+        const wordDefinitionTitle = document.getElementById('definition-title');
+        const readAllButton = document.getElementById('read-all-button');
+        const testOrderButton = document.getElementById('test-order-button');
+        const testRandomButton = document.getElementById('test-random-button');
+        const endTestButton = document.getElementById('end-test-button');
+        let wordListData = [];
+        let testInProgress = false;
+
+        // Fetch word data from external JSON file
+        fetch('terms/terms.json')
+            .then(response => response.json())
+            .then(data => {
+                // Store the word list for all weeks
+                window.allWeeksData = data;
+                populateWeekSelector();
+            })
+            .catch(error => {
+                console.error('Error loading the word list:', error);
+                alert('There was an error loading the word list.');
+            });
+
+        // Function to populate the week selector dropdown dynamically
+        function populateWeekSelector() {
+            const weeks = Object.keys(window.allWeeksData);
+            weeks.forEach(week => {
+                const option = document.createElement('option');
+                option.value = week;
+                option.textContent = `Week ${week.replace('week', '')}`;
+                weekSelector.appendChild(option);
+            });
+        }
+
+        // Function to display words based on selected week
+        function displayWords(week) {
+            if (!week || !window.allWeeksData[week]) return;
+
+            // Clear previous list and disable buttons until words are loaded
+            wordListContainer.innerHTML = '';
+            wordDefinition.innerHTML = '';
+            wordDefinitionTitle.style.display = 'none'; // Hide definition title initially
+            readAllButton.disabled = false;
+            testOrderButton.disabled = false;
+            testRandomButton.disabled = false;
+
+            wordListData = window.allWeeksData[week];
+
+            wordListData.forEach(wordData => {
+                const wordElement = document.createElement('li');
+                wordElement.classList.add('word-item');
+                wordElement.textContent = wordData.word;
+                wordElement.dataset.word = wordData.word;
+                wordElement.dataset.definition = wordData.definition;
+                wordListContainer.appendChild(wordElement);
+
+                // Add click listener to each word item
+                wordElement.addEventListener('click', () => {
+                    highlightWord(wordElement);
+                    showDefinition(wordElement);
+                    speakWord(wordElement.dataset.word);
+                    spellWord(wordElement.dataset.word);
+                });
+            });
+        }
+
+        // Event listener for week selection
+        weekSelector.addEventListener('change', (event) => {
+            const selectedWeek = event.target.value;
+            displayWords(selectedWeek);
+        });
+
+        // Function to speak a word (Only once)
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            speechSynthesis.speak(utterance);
+        }
+
+        // Function to spell a word
+        function spellWord(word) {
+            const letters = word.split('');
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(letter);
+                    speechSynthesis.speak(utterance);
+                }, index * 500);
+            });
+        }
+
+        // Function to highlight the selected word
+        function highlightWord(wordElement) {
+            const wordItems = document.querySelectorAll('.word-item');
+            wordItems.forEach(item => item.classList.remove('highlight'));
+            wordElement.classList.add('highlight');
+        }
+
+        // Function to show the definition of the selected word
+        function showDefinition(wordElement) {
+            wordDefinition.textContent = wordElement.dataset.definition;
+            wordDefinitionTitle.style.display = 'block'; // Show the title when displaying the definition
+        }
+
+        // Function to read all words for the selected week
+        function readAllWords() {
+            let index = 0;
+            readAllButton.disabled = true;
+            testOrderButton.disabled = true;
+            testRandomButton.disabled = true;
+            endTestButton.style.display = 'none';  // Hide "End Test" button during Read All Words
+
+            function nextWord() {
+                if (index >= wordListData.length) {
+                    readAllButton.disabled = false;
+                    testOrderButton.disabled = false;
+                    testRandomButton.disabled = false;
+                    return;
+                }
+
+                const wordData = wordListData[index];
+                const wordElement = document.querySelector(`[data-word="${wordData.word}"]`);
+                highlightWord(wordElement);
+                showDefinition(wordElement);
+                speakWord(wordData.word); // Speak the word once
+                spellWord(wordData.word);  // Spell the word
+                index++;
+                setTimeout(nextWord, 3300); // Delay between words (0.3s longer)
+            }
+            nextWord();
+        }
+
+        readAllButton.addEventListener('click', readAllWords);
+
+        // Add speech recognition for testing
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        // Function to start the test
+        function startTest(isRandom) {
+            // Hide word list and show only the definition
+            wordListContainer.style.display = 'none';
+            wordDefinition.innerHTML = ''; // Clear previous definition
+            wordDefinitionTitle.style.display = 'block';
+
+            let wordsToTest = [...wordListData];
+            if (isRandom) {
+                wordsToTest = wordsToTest.sort(() => Math.random() - 0.5);
+            }
+            let score = 0;
+            let currentTestIndex = 0;
+
+            // Disable buttons
+            readAllButton.disabled = true;
+            testOrderButton.disabled = true;
+            testRandomButton.disabled = true;
+            endTestButton.style.display = 'inline-block'; // Show "End Test" button
+
+            function askForSpelling() {
+                if (currentTestIndex >= wordsToTest.length) {
+                    alert(`Test Complete! You scored ${score} out of ${wordsToTest.length}`);
+                    wordListContainer.style.display = 'block'; // Show word list again
+                    return;
+                }
+
+                const word = wordsToTest[currentTestIndex].word;
+                showDefinitionForTest(word);
+                speakWord(word); // Speak the word once
+                setTimeout(() => {
+                    // Start speech recognition
+                    recognition.start();
+
+                    recognition.onresult = function(event) {
+                        const userSpelling = event.results[0][0].transcript.trim().toLowerCase();
+                        if (userSpelling === word.toLowerCase()) {
+                            score++;
+                            alert("Correct!");
+                        } else {
+                            alert(`Incorrect. The correct spelling is: ${word}`);
+                        }
+                        currentTestIndex++;
+                        askForSpelling();
+                    };
+
+                    recognition.onerror = function(event) {
+                        alert("Sorry, I couldn't understand your spelling. Please try again.");
+                        recognition.stop();
+                    };
+                }, 1000);
+            }
+
+            speakWord('The test is about to begin.');
+            setTimeout(askForSpelling, 2000);
+        }
+
+        testOrderButton.addEventListener('click', () => startTest(false));
+        testRandomButton.addEventListener('click', () => startTest(true));
+
+        // Function to show definition for the test
+        function showDefinitionForTest(word) {
+            const wordData = wordListData.find(item => item.word === word);
+            wordDefinition.textContent = wordData ? wordData.definition : '';
+        }
+
+        // End test button
+        function endTest() {
+            // Reset UI and hide the test-related elements
+            wordListContainer.style.display = 'block'; // Show word list again
+            endTestButton.style.display = 'none'; // Hide "End Test" button
+            readAllButton.disabled = false;
+            testOrderButton.disabled = false;
+            testRandomButton.disabled = false;
+            alert('The test has been ended.');
+        }
+    </script>
+
+</body>
+</html>
+
