@@ -1,183 +1,164 @@
-let words = [];
-let currentTestIndex = 0;
-let currentTestOrder = [];
-let inTest = false;
+// Initialize empty object for word data
+let wordData = {};
 
-// UI Elements
-const wordListContainer = document.getElementById("word-list-container");
-const wordDefinition = document.getElementById("word-definition");
-const readWordsBtn = document.getElementById("read-words-btn");
-const testInOrderBtn = document.getElementById("test-in-order-btn");
-const testRandomOrderBtn = document.getElementById("test-random-order-btn");
-const stopTestBtn = document.getElementById("stop-test-button");
-const weekSelector = document.getElementById("week-selector");
+// Fetch the terms/terms.json file
+fetch('terms/terms.json')
+  .then(response => response.json())
+  .then(data => {
+    wordData = data;  // Store the fetched JSON data into wordData
+    loadWords();       // Once data is loaded, call loadWords to display them
+  })
+  .catch(error => {
+    console.error('Error loading the terms data:', error);
+  });
 
-// Fetch the terms from the terms.json file
-async function fetchTerms() {
-  try {
-    const response = await fetch('terms/terms.json');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error loading terms:", error);
-    alert("Failed to load spelling words.");
-  }
-}
+// References to DOM elements
+const wordListDiv = document.getElementById('wordList');
+const weekSelector = document.getElementById('weekSelector');
+const readWordsBtn = document.getElementById('readWordsBtn');
+const testInOrderBtn = document.getElementById('testInOrderBtn');
+const testRandomBtn = document.getElementById('testRandomBtn');
+const scoreDiv = document.getElementById('score');
+
+let currentWords = [];
 
 // Load words for the selected week
-async function loadWords() {
-  const data = await fetchTerms();
-  const selectedWeek = weekSelector.value;
-  
-  // Set the words for the selected week
-  words = data[selectedWeek] || [];
-
-  // Populate word list in UI
-  wordListContainer.innerHTML = '';
-  words.forEach((wordObj, index) => {
-    const li = document.createElement("li");
-    li.textContent = wordObj.word;
-    li.id = `word-${index}`;
-    wordListContainer.appendChild(li);
-  });
-  
-  // Clear the definition box
-  wordDefinition.textContent = '';
-}
-
-// Read the words aloud and spell them
-function readWords() {
-  let speech = new SpeechSynthesisUtterance();
-  speech.lang = "en-US";
-
-  function readWord(index) {
-    if (index >= words.length) return;
-    const wordObj = words[index];
-    
-    // Highlight the current word
-    document.getElementById(`word-${index}`).classList.add('highlight');
-    wordDefinition.textContent = wordObj.meaning;
-    
-    // Say the word, then spell it, then say the word again
-    speech.text = wordObj.word;
-    speechSynthesis.speak(speech);
-    
-    // Spell out the word
-    speech.text = wordObj.word.split('').join(' ');
-    speechSynthesis.speak(speech);
-    
-    // Say the word again
-    speech.text = wordObj.word;
-    speechSynthesis.speak(speech);
-
-    // Remove highlight
-    setTimeout(() => {
-      document.getElementById(`word-${index}`).classList.remove('highlight');
-      readWord(index + 1);
-    }, 3000); // Wait for the full reading to complete before highlighting the next word
-  }
-
-  readWord(0);
-}
-
-// Start spelling test in order
-function startTestInOrder() {
-  currentTestIndex = 0;
-  currentTestOrder = words.map((_, index) => index);
-  inTest = true;
-  runSpellingTest();
-}
-
-// Start spelling test in random order
-function startTestRandomOrder() {
-  currentTestIndex = 0;
-  currentTestOrder = shuffleArray(words.map((_, index) => index));
-  inTest = true;
-  runSpellingTest();
-}
-
-// Shuffle an array (for random order)
-function shuffleArray(array) {
-  return array.sort(() => Math.random() - 0.5);
-}
-
-// Run the spelling test
-function runSpellingTest() {
-  if (currentTestIndex >= currentTestOrder.length) {
-    endTest();
-    return;
-  }
-
-  const currentWordIndex = currentTestOrder[currentTestIndex];
-  const currentWordObj = words[currentWordIndex];
-
-  // Ask the child to spell the word
-  wordDefinition.textContent = `Spell the word: ${currentWordObj.word}`;
-  askForSpelling(currentWordObj.word);
-}
-
-// Ask for spelling via voice recognition
-function askForSpelling(word) {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = "en-US";
-  recognition.start();
-
-  recognition.onresult = function(event) {
-    const spokenWord = event.results[0][0].transcript.trim().toLowerCase();
-    checkSpelling(spokenWord);
-  };
-
-  recognition.onerror = function(event) {
-    alert('Error recognizing speech. Please try again.');
-  };
-}
-
-// Check the spelling
-function checkSpelling(spokenWord) {
-  const currentWordObj = words[currentTestOrder[currentTestIndex]];
-  if (spokenWord === currentWordObj.word.toLowerCase()) {
-    wordDefinition.textContent = `Correct! The word was: ${currentWordObj.word}`;
+function loadWords() {
+  const week = weekSelector.value;
+  if (wordData[week]) {
+    currentWords = wordData[week];
   } else {
-    wordDefinition.textContent = `Incorrect. The correct spelling was: ${currentWordObj.word}`;
+    currentWords = [];
   }
 
-  currentTestIndex++;
-  setTimeout(runSpellingTest, 2000); // Move to the next word after a short delay
+  wordListDiv.innerHTML = '';
+  currentWords.forEach((item, index) => {
+    const wordDiv = document.createElement('div');
+    wordDiv.id = `word-${index}`;
+    wordDiv.innerHTML = `<b>${item.word}</b>: ${item.meaning}`;
+    wordListDiv.appendChild(wordDiv);
+  });
 }
 
-// End the test
-function endTest() {
-  inTest = false;
-  wordDefinition.textContent = "Test complete! Well done!";
-  testButtonsVisible(true);
-}
+// Speak the word, spell it, and repeat the word
+function readWordList() {
+  let index = 0;
+  function speakNextWord() {
+    if (index < currentWords.length) {
+      const word = currentWords[index].word;
+      const wordMeaning = currentWords[index].meaning;
 
-// Toggle test buttons visibility
-function testButtonsVisible(visible) {
-  testInOrderBtn.style.display = visible ? "block" : "none";
-  testRandomOrderBtn.style.display = visible ? "block" : "none";
-  stopTestBtn.style.display = visible ? "none" : "block";
-}
+      // Highlight the word and show meaning
+      const wordDiv = document.getElementById(`word-${index}`);
+      wordDiv.classList.add('highlighted');
+      wordListDiv.innerHTML += `<p><b>${word}:</b> ${wordMeaning}</p>`;
 
-// Stop the test
-function stopTest() {
-  inTest = false;
-  wordDefinition.textContent = "Test stopped. You can review the words now.";
-  testButtonsVisible(true);
-}
-
-// Event listeners for buttons
-readWordsBtn.addEventListener("click", () => {
-  if (!inTest) {
-    readWords();
+      // Text-to-Speech
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(`The word is ${word}`);
+      synth.speak(utterance);
+      utterance.onend = function () {
+        // Spell the word
+        const spellUtterance = new SpeechSynthesisUtterance(`Spelling: ${word.split('').join(' ')}`);
+        synth.speak(spellUtterance);
+        spellUtterance.onend = function () {
+          // Repeat the word
+          const repeatUtterance = new SpeechSynthesisUtterance(word);
+          synth.speak(repeatUtterance);
+          repeatUtterance.onend = function () {
+            // Move to the next word
+            wordDiv.classList.remove('highlighted');
+            index++;
+            speakNextWord();
+          };
+        };
+      };
+    }
   }
-});
 
-testInOrderBtn.addEventListener("click", startTestInOrder);
-testRandomOrderBtn.addEventListener("click", startTestRandomOrder);
-stopTestBtn.addEventListener("click", stopTest);
+  speakNextWord();
+}
 
-// Initial UI setup
-loadWords();
-weekSelector.addEventListener("change", loadWords);
+// Function to test spelling in order or randomly
+function startSpellingTest(isRandom = false) {
+  let wordsToTest = [...currentWords];
+  if (isRandom) {
+    wordsToTest = wordsToTest.sort(() => Math.random() - 0.5); // Shuffle words
+  }
+  
+  let currentWordIndex = 0;
+  let score = 0;
+  
+  // Announce the test
+  const synth = window.speechSynthesis;
+  const testAnnounce = new SpeechSynthesisUtterance("The test is about to begin.");
+  synth.speak(testAnnounce);
+  
+  testAnnounce.onend = function () {
+    function askWord() {
+      if (currentWordIndex < wordsToTest.length) {
+        const word = wordsToTest[currentWordIndex].word;
+
+        // Speak the word and ask user to spell it
+        const wordUtterance = new SpeechSynthesisUtterance(`Please spell the word ${word}`);
+        synth.speak(wordUtterance);
+
+        // Start speech recognition
+        recognizeSpelling(word);
+      } else {
+        // End test and show score
+        showScore(score);
+      }
+    }
+
+    function recognizeSpelling(correctWord) {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-US';
+      recognition.start();
+
+      recognition.onresult = function (event) {
+        const userAnswer = event.results[0][0].transcript.toLowerCase();
+        if (userAnswer === correctWord) {
+          score++;
+          showCorrectAnswer(currentWordIndex, true);
+        } else {
+          showCorrectAnswer(currentWordIndex, false);
+        }
+        currentWordIndex++;
+        askWord();
+      };
+
+      recognition.onerror = function () {
+        alert('Error recognizing speech. Please try again.');
+      };
+    }
+
+    function showCorrectAnswer(index, isCorrect) {
+      const wordDiv = document.getElementById(`word-${index}`);
+      if (isCorrect) {
+        wordDiv.classList.add('correct');
+      } else {
+        wordDiv.classList.add('incorrect');
+      }
+    }
+
+    askWord();
+  }
+}
+
+// Show score and feedback
+function showScore(correctAnswers) {
+  scoreDiv.innerHTML = `You got ${correctAnswers} out of ${currentWords.length} correct!`;
+  const feedback = correctAnswers === currentWords.length ? 'Great job!' : 'Keep practicing!';
+  scoreDiv.innerHTML += `<br>${feedback}`;
+}
+
+// Event listeners
+weekSelector.addEventListener('change', loadWords);
+readWordsBtn.addEventListener('click', readWordList);
+testInOrderBtn.addEventListener('click', () => startSpellingTest(false));
+testRandomBtn.addEventListener('click', () => startSpellingTest(true));
+
+// Initialize the app
+// The data will be loaded asynchronously, so no immediate call to loadWords
 

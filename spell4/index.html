@@ -5,53 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Spelling Test App</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    .highlight {
+    .highlighted {
       background-color: yellow;
     }
-    #word-list {
-      margin-bottom: 20px;
+    .correct {
+      background-color: lightgreen;
     }
-    #buttons {
-      margin-top: 20px;
-    }
-    #test-buttons {
-      display: block;
-      margin-top: 20px;
-    }
-    #stop-test-button {
-      display: none;
+    .incorrect {
+      background-color: lightcoral;
     }
   </style>
 </head>
 <body>
-  <h1>Spelling Test</h1>
-  
-  <!-- Word List and Definition Section -->
-  <div id="word-list">
-    <ul id="word-list-container"></ul>
-    <div id="word-definition"></div>
-  </div>
-  
-  <!-- Dropdown for selecting week -->
-  <select id="week-selector">
+
+  <h1>Spelling Test App</h1>
+
+  <h3>Select Week:</h3>
+  <select id="weekSelector">
     <option value="week1">Week 1</option>
     <option value="week2">Week 2</option>
-    <!-- Add more weeks as needed -->
   </select>
-  
-  <!-- Buttons for reading and testing -->
-  <div id="buttons">
-    <button id="read-words-btn">Read Words Aloud</button>
-  </div>
-  
-  <div id="test-buttons">
-    <button id="test-in-order-btn">Test in Order</button>
-    <button id="test-random-order-btn">Test Random Order</button>
-    <button id="stop-test-button">Stop Test</button>
-  </div>
+
+  <div id="wordList"></div>
+
+  <button id="readWordsBtn">Read Words Aloud</button>
+  <button id="testInOrderBtn">Test in Order</button>
+  <button id="testRandomBtn">Test Random</button>
+
+  <div id="score"></div>
 
   <script src="app.js"></script>
 </body>
