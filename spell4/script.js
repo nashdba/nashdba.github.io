@@ -1,18 +1,7 @@
 // File: script.js
 
 let currentWords = [];
-
-// Example word list data (can be replaced with a JSON file in a real-world scenario)
-const wordData = {
-  "week1": [
-    { "word": "apple", "meaning": "A fruit that is typically round and red, green, or yellow in color." },
-    { "word": "ball", "meaning": "A spherical object used in games and sports." }
-  ],
-  "week2": [
-    { "word": "cat", "meaning": "A small domesticated carnivorous mammal with soft fur." },
-    { "word": "dog", "meaning": "A domesticated carnivorous mammal with a barking sound." }
-  ]
-};
+let selectedWeek = 'week1';  // Default week
 
 // DOM Elements
 const weekSelector = document.getElementById('weekSelector');
@@ -23,35 +12,74 @@ const wordListContainer = document.getElementById('wordListContainer');
 const definitionText = document.getElementById('definitionText');
 const scoreDiv = document.getElementById('score');
 
-// Function to load words based on the selected week
-function loadWords() {
-  const selectedWeek = weekSelector.value;
-  currentWords = wordData[selectedWeek];
+// Function to load words from the external JSON file
+async function loadWords() {
+  try {
+    const response = await fetch('terms/terms.json');
+    const data = await response.json();
 
-  // Clear previous list
-  wordListContainer.innerHTML = '';
+    // Set the selected words for the current week
+    currentWords = data[selectedWeek];
 
-  // Generate the word list for the selected week
-  currentWords.forEach((wordData, index) => {
-    const wordDiv = document.createElement('div');
-    wordDiv.classList.add('word-item');
-    wordDiv.id = `word-${index}`;
-    wordDiv.textContent = wordData.word;
-    
-    // When the word is clicked, speak it
-    wordDiv.addEventListener('click', () => speakWord(wordData.word, wordData.meaning));
+    // Clear previous list
+    wordListContainer.innerHTML = '';
 
-    wordListContainer.appendChild(wordDiv);
-  });
+    // Generate the word list for the selected week
+    currentWords.forEach((wordData, index) => {
+      const wordDiv = document.createElement('div');
+      wordDiv.classList.add('word-item');
+      wordDiv.id = `word-${index}`;
+      wordDiv.textContent = wordData.word;
+      
+      // When the word is clicked, speak it
+      wordDiv.addEventListener('click', () => speakWord(wordData.word, wordData.meaning));
+
+      wordListContainer.appendChild(wordDiv);
+    });
+  } catch (error) {
+    console.error('Error loading word data:', error);
+  }
 }
 
-// Function to get a British English voice
-function getBritishVoice() {
+// Function to populate the week selector dropdown dynamically
+async function populateWeekSelector() {
+  try {
+    const response = await fetch('terms/terms.json');
+    const data = await response.json();
+
+    // Get the week keys dynamically
+    const weeks = Object.keys(data);
+    weekSelector.innerHTML = ''; // Clear any previous options
+
+    // Add a default "Please Select" option
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = 'Select Week';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    weekSelector.appendChild(defaultOption);
+
+    // Add an option for each week in the JSON file
+    weeks.forEach(week => {
+      const option = document.createElement('option');
+      option.value = week;
+      option.textContent = week;
+      weekSelector.appendChild(option);
+    });
+
+    // Set the default selection based on the current selectedWeek
+    weekSelector.value = selectedWeek;
+  } catch (error) {
+    console.error('Error loading week data:', error);
+  }
+}
+
+// Function to get a British English female voice
+function getBritishFemaleVoice() {
   const synth = window.speechSynthesis;
   const voices = synth.getVoices();
 
-  // Try to find a British English voice (e.g., "Google UK English Male" or "Google UK English Female")
-  return voices.find(voice => voice.lang === 'en-GB') || voices[0];  // Default to the first available voice if none found
+  // Find a female British English voice
+  return voices.find(voice => voice.lang === 'en-GB' && voice.name.includes('Female')) || voices[0];  // Default if none found
 }
 
 // Function to speak the word (say word, spell it, then say word again)
@@ -60,8 +88,8 @@ function speakWord(word, meaning) {
   const utterance = new SpeechSynthesisUtterance();
   utterance.lang = 'en-GB'; // Set the language to British English
 
-  // Set the voice to a British English voice
-  utterance.voice = getBritishVoice();
+  // Set the voice to a British English female voice
+  utterance.voice = getBritishFemaleVoice();
 
   // Speak the word
   utterance.text = `The word is ${word}`;
@@ -162,7 +190,7 @@ function speakText(text, rate = 1) {
   const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-GB'; // British English
-  utterance.voice = getBritishVoice(); // Set voice to British English
+  utterance.voice = getBritishFemaleVoice(); // Set voice to British English
   utterance.rate = rate; // Slow down the rate of speech for better comprehension
   synth.speak(utterance);
 }
@@ -175,11 +203,18 @@ function showScore(correctAnswers) {
 }
 
 // Event listeners
-weekSelector.addEventListener('change', loadWords);  // Load words when week changes
+weekSelector.addEventListener('change', () => {
+  selectedWeek = weekSelector.value;
+  loadWords();
+});  // Load words when week changes
+
 readWordsBtn.addEventListener('click', loadWords);   // Read the words aloud
 testInOrderBtn.addEventListener('click', () => startSpellingTest(false));  // Test in order
 testRandomBtn.addEventListener('click', () => startSpellingTest(true));  // Test randomly
 
-// Load words on initial page load
+// Initial population of the week selector
+populateWeekSelector();
+
+// Load words for the default selected week
 loadWords();
 
