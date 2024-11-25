@@ -235,7 +235,7 @@
 
         // Function to read all words in the list
         function readAllWords() {
-            if (isReading || isReadingAllWords) return;  // Prevent reading if already in progress
+            if (isReadingAllWords) return;  // Prevent reading if already in progress
 
             isReadingAllWords = true;
             readAllButton.disabled = true;  // Disable the button to prevent multiple clicks
@@ -248,9 +248,9 @@
         // Function to read the next word in the list
         function readNextWord() {
             if (currentIndex >= wordListData.length) {
-                isReadingAllWords = false;  // Reset the flag once all words have been read
-                readAllButton.disabled = false;  // Re-enable the "Read All Words" button
-                endReadingButton.style.display = 'none';  // Hide the "End Reading" button
+                isReadingAllWords = false;
+                readAllButton.disabled = false;
+                endReadingButton.style.display = 'none';
                 return;
             }
 
@@ -268,23 +268,104 @@
 
         // Function to end the reading of all words early
         function endReading() {
-            isReadingAllWords = false;  // Reset flag
-            readAllButton.disabled = false;  // Re-enable "Read All Words"
-            endReadingButton.style.display = 'none';  // Hide the "End Reading" button
+            isReadingAllWords = false;
+            readAllButton.disabled = false;
+            endReadingButton.style.display = 'none';
             speechSynthesis.cancel();  // Stop current speech synthesis
         }
 
-        // Test buttons listeners
-        testOrderButton.addEventListener('click', () => startTest(false));
-        testRandomButton.addEventListener('click', () => startTest(true));
+        // Function to start a test (in order or random)
+        function startTest(random) {
+            // Hide word list and definition
+            wordListContainer.style.display = 'none';
+            wordDefinition.innerHTML = '';
 
-        // Function to end test
-        function endTest() {
-            // Logic to end the test (e.g., show feedback or reset)
+            // Notify user that the test is starting
+            const testIntro = new SpeechSynthesisUtterance('The test is about to begin.');
+            speechSynthesis.speak(testIntro);
+
+            setTimeout(() => {
+                // Start the test after intro
+                if (random) {
+                    shuffle(wordListData);
+                }
+
+                startTestSequence();
+            }, 2000);
         }
 
-        // Initialize everything on page load
-        populateWeekSelector();
+        // Function to shuffle the word list for random order
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        // Start test sequence (spelling words one at a time)
+        function startTestSequence() {
+            let testIndex = 0;
+
+            function testNextWord() {
+                if (testIndex >= wordListData.length) {
+                    endTest();
+                    return;
+                }
+
+                const word = wordListData[testIndex].word;
+                speakWord(word); // Read word aloud
+                highlightWord(wordListContainer.children[testIndex]);
+                showDefinition(wordListContainer.children[testIndex]);
+
+                // Ask the user to spell the word
+                setTimeout(() => {
+                    // Capture the user input via speech recognition
+                    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    recognition.start();
+
+                    recognition.onresult = (event) => {
+                        const userSpelling = event.results[0][0].transcript;
+                        checkSpelling(word, userSpelling);
+                        testIndex++;
+                        testNextWord();
+                    };
+
+                    recognition.onerror = (event) => {
+                        alert('Error recognizing speech');
+                    };
+                }, 1000);
+            }
+
+            testNextWord();
+        }
+
+        // Check if the spelling is correct
+        function checkSpelling(word, userSpelling) {
+            const wordElement = [...wordListContainer.children].find(el => el.dataset.word === word);
+            if (userSpelling.toLowerCase() === word.toLowerCase()) {
+                wordElement.classList.add('correct');
+            } else {
+                wordElement.classList.add('incorrect');
+            }
+        }
+
+        // Function to end the test early
+        function endTest() {
+            wordListContainer.style.display = 'block';  // Show word list again
+            wordDefinition.innerHTML = '';  // Clear the definition
+
+            // Display correct and incorrect words for 20 seconds
+            setTimeout(() => {
+                [...wordListContainer.children].forEach(wordElement => {
+                    wordElement.classList.remove('correct', 'incorrect');
+                });
+            }, 20000);
+        }
+
+        // Event listeners for buttons
+        readAllButton.addEventListener('click', readAllWords);
+        testOrderButton.addEventListener('click', () => startTest(false));
+        testRandomButton.addEventListener('click', () => startTest(true));
     </script>
 
 </body>
