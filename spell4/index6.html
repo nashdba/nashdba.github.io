@@ -82,6 +82,10 @@
             background-color: #e74c3c;
             color: white;
         }
+        #end-reading-button {
+            background-color: #e67e22;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -105,6 +109,7 @@
         <button id="read-all-button" class="button" disabled>Read All Words</button>
         <button id="test-order-button" class="button" disabled>Test in Order</button>
         <button id="test-random-button" class="button" disabled>Test Random</button>
+        <button id="end-reading-button" class="button" style="display:none;" onclick="endReading()">End Reading</button>
         <button id="end-test-button" class="button" style="display:none;" onclick="endTest()">End Test</button>
     </div>
 
@@ -116,6 +121,7 @@
         const readAllButton = document.getElementById('read-all-button');
         const testOrderButton = document.getElementById('test-order-button');
         const testRandomButton = document.getElementById('test-random-button');
+        const endReadingButton = document.getElementById('end-reading-button');
         const endTestButton = document.getElementById('end-test-button');
         let wordListData = [];
         let isReading = false;  // Flag to track if reading/spelling is in progress
@@ -231,6 +237,9 @@
         function readAllWords() {
             let index = 0;
             isReading = true;  // Prevent other selections
+            readAllButton.disabled = true;  // Disable the read-all button during the reading
+
+            endReadingButton.style.display = 'inline-block';  // Show the "End Reading" button
 
             function nextWord() {
                 if (index < wordListData.length) {
@@ -242,6 +251,8 @@
                     index++;
                 } else {
                     isReading = false;  // Allow selection after all words are read
+                    readAllButton.disabled = false;  // Re-enable the read-all button
+                    endReadingButton.style.display = 'none';  // Hide the "End Reading" button
                 }
             }
 
@@ -251,12 +262,21 @@
         // Button listeners
         readAllButton.addEventListener('click', readAllWords);
 
+        // Function to end reading early
+        function endReading() {
+            isReading = false;
+            readAllButton.disabled = false;  // Re-enable the read-all button
+            endReadingButton.style.display = 'none';  // Hide the "End Reading" button
+        }
+
         // Test buttons listeners
         testOrderButton.addEventListener('click', () => startTest(false));
         testRandomButton.addEventListener('click', () => startTest(true));
 
-        // Test logic (as per previous requirements)...
-        // ... (The remaining test code would stay the same)
+        // Function to end test
+        function endTest() {
+            // Logic to end the test (e.g., show feedback or reset)
+        }
 
     </script>
 
