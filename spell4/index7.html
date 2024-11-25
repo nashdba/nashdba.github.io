@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Learning App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h1 {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 0;
+        }
+        .container {
+            margin: 20px;
+        }
+        .word-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .word-item {
+            padding: 10px;
+            margin: 5px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .word-item:hover {
+            background-color: #bdc3c7;
+        }
+        .highlight {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .correct {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .incorrect {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .definition {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+        }
+        .button:disabled {
+            background-color: #bdc3c7;
+        }
+        select {
+            padding: 10px;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+        #definition-title {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: left;
+            padding-left: 20px;
+        }
+        #word-list {
+            display: block;
+        }
+        #end-test-button {
+            background-color: #e74c3c;
+            color: white;
+        }
+        #end-reading-button {
+            background-color: #e67e22;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Word Learning App</h1>
+
+    <div class="container">
+        <h2>Select Week</h2>
+        <select id="week-selector">
+            <option value="">-- Select Week --</option>
+        </select>
+
+        <h2>Words of the Selected Week</h2>
+        <ul id="word-list" class="word-list">
+            <!-- Dynamic word list will be inserted here -->
+        </ul>
+
+        <div id="definition-title">Word Definition:</div>
+        <div class="definition" id="word-definition"></div>
+
+        <button id="read-all-button" class="button" disabled>Read All Words</button>
+        <button id="test-order-button" class="button" disabled>Test in Order</button>
+        <button id="test-random-button" class="button" disabled>Test Random</button>
+        <button id="end-reading-button" class="button" style="display:none;" onclick="endReading()">End Reading</button>
+        <button id="end-test-button" class="button" style="display:none;" onclick="endTest()">End Test</button>
+    </div>
+
+    <script>
+        const weekSelector = document.getElementById('week-selector');
+        const wordListContainer = document.getElementById('word-list');
+        const wordDefinition = document.getElementById('word-definition');
+        const wordDefinitionTitle = document.getElementById('definition-title');
+        const readAllButton = document.getElementById('read-all-button');
+        const testOrderButton = document.getElementById('test-order-button');
+        const testRandomButton = document.getElementById('test-random-button');
+        const endReadingButton = document.getElementById('end-reading-button');
+        const endTestButton = document.getElementById('end-test-button');
+        let wordListData = [];
+        let isReading = false;  // Flag to track if reading/spelling is in progress
+        let isReadingAllWords = false;  // Flag for "Read All Words" process
+        let currentIndex = 0;
+
+        // Fetch word data from external JSON file
+        fetch('terms/terms.json')
+            .then(response => response.json())
+            .then(data => {
+                window.allWeeksData = data;
+                populateWeekSelector();
+            })
+            .catch(error => {
+                console.error('Error loading the word list:', error);
+                alert('There was an error loading the word list.');
+            });
+
+        // Function to populate the week selector dropdown dynamically
+        function populateWeekSelector() {
+            const weeks = Object.keys(window.allWeeksData);
+            weeks.forEach(week => {
+                const option = document.createElement('option');
+                option.value = week;
+                option.textContent = `Week ${week.replace('week', '')}`;
+                weekSelector.appendChild(option);
+            });
+        }
+
+        // Function to display words based on selected week
+        function displayWords(week) {
+            if (!week || !window.allWeeksData[week]) return;
+
+            wordListContainer.innerHTML = '';
+            wordDefinition.innerHTML = '';
+            wordDefinitionTitle.style.display = 'none';
+            readAllButton.disabled = false;
+            testOrderButton.disabled = false;
+            testRandomButton.disabled = false;
+
+            wordListData = window.allWeeksData[week];
+
+            wordListData.forEach(wordData => {
+                const wordElement = document.createElement('li');
+                wordElement.classList.add('word-item');
+                wordElement.textContent = wordData.word;
+                wordElement.dataset.word = wordData.word;
+                wordElement.dataset.definition = wordData.definition;
+                wordListContainer.appendChild(wordElement);
+
+                // Add click listener to each word item
+                wordElement.addEventListener('click', () => {
+                    if (!isReading && !isReadingAllWords) {  // Prevent clicks if reading or 'Read All' is in progress
+                        isReading = true;  // Set the flag to prevent other selections
+                        highlightWord(wordElement);
+                        showDefinition(wordElement);
+                        speakWord(wordElement.dataset.word);
+                        spellWord(wordElement.dataset.word, wordElement);
+                    }
+                });
+            });
+        }
+
+        // Event listener for week selection
+        weekSelector.addEventListener('change', (event) => {
+            const selectedWeek = event.target.value;
+            displayWords(selectedWeek);
+        });
+
+        // Function to speak a word (Only once)
+        function speakWord(word) {
+            const utterance = new SpeechSynthesisUtterance(word);
+            speechSynthesis.speak(utterance);
+        }
+
+        // Function to spell a word
+        function spellWord(word, wordElement) {
+            const letters = word.split('');
+            let letterIndex = 0;
+
+            function spellNextLetter() {
+                if (letterIndex < letters.length) {
+                    const utterance = new SpeechSynthesisUtterance(letters[letterIndex]);
+                    speechSynthesis.speak(utterance);
+                    letterIndex++;
+                    setTimeout(spellNextLetter, 500);  // Delay between letters
+                } else {
+                    // After spelling is done, allow user to select another word
+                    setTimeout(() => {
+                        isReading = false;  // Reset the flag to allow the next selection
+                        removeHighlight(wordElement);  // Remove highlight after finishing
+                    }, 1000);
+                }
+            }
+
+            spellNextLetter();
+        }
+
+        // Function to highlight the selected word
+        function highlightWord(wordElement) {
+            const wordItems = document.querySelectorAll('.word-item');
+            wordItems.forEach(item => item.classList.remove('highlight'));
+            wordElement.classList.add('highlight');
+        }
+
+        // Function to remove highlight from the word
+        function removeHighlight(wordElement) {
+            wordElement.classList.remove('highlight');
+        }
+
+        // Function to show the definition of the selected word
+        function showDefinition(wordElement) {
+            wordDefinitionTitle.style.display = 'block';
+            wordDefinition.textContent = wordElement.dataset.definition;
+        }
+
+        // Function to read all words in the list
+        function readAllWords() {
+            if (isReadingAllWords) return;  // Prevent reading if already in progress
+
+            isReadingAllWords = true;
+            readAllButton.disabled = true;  // Disable the button to prevent multiple clicks
+            endReadingButton.style.display = 'inline-block';  // Show the "End Reading" button
+
+            currentIndex = 0;
+            readNextWord();
+        }
+
+        // Function to read the next word in the list
+        function readNextWord() {
+            if (currentIndex >= wordListData.length) {
+                isReadingAllWords = false;
+                readAllButton.disabled = false;
+                endReadingButton.style.display = 'none';
+                return;
+            }
+
+            const word = wordListData[currentIndex].word;
+            const wordElement = wordListContainer.children[currentIndex];
+
+            speakWord(word);
+            highlightWord(wordElement);
+            showDefinition(wordElement);
+
+            setTimeout(() => {
+                spellWord(word, wordElement);
+                currentIndex++;
+                setTimeout(readNextWord, 3300);  // 0.3s longer delay between words
+            }, 2000);  // Wait for the word to be spoken before spelling
+        }
+
+        // Function to end the reading of all words early
+        function endReading() {
+            isReadingAllWords = false;
+            readAllButton.disabled = false;
+            endReadingButton.style.display = 'none';
+            speechSynthesis.cancel();  // Stop current speech synthesis
+        }
+
+        // Function to start a test (in order or random)
+        function startTest(random) {
+            // Hide word list and definition
+            wordListContainer.style.display = 'none';
+            wordDefinition.innerHTML = '';
+
+            // Notify user that the test is starting
+            const testIntro = new SpeechSynthesisUtterance('The test is about to begin.');
+            speechSynthesis.speak(testIntro);
+
+            setTimeout(() => {
+                // Start the test after intro
+                if (random) {
+                    shuffle(wordListData);
+                }
+
+                startTestSequence();
+            }, 2000);
+        }
+
+        // Function to shuffle the word list for random order
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        // Start test sequence (spelling words one at a time)
+        function startTestSequence() {
+            let testIndex = 0;
+
+            function testNextWord() {
+                if (testIndex >= wordListData.length) {
+                    endTest();
+                    return;
+                }
+
+                const word = wordListData[testIndex].word;
+                speakWord(word); // Read word aloud
+                highlightWord(wordListContainer.children[testIndex]);
+                showDefinition(wordListContainer.children[testIndex]);
+
+                // Ask the user to spell the word
+                setTimeout(() => {
+                    // Capture the user input via speech recognition
+                    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                    recognition.start();
+
+                    recognition.onresult = (event) => {
+                        const userSpelling = event.results[0][0].transcript;
+                        checkSpelling(word, userSpelling);
+                        testIndex++;
+                        testNextWord();
+                    };
+
+                    recognition.onerror = (event) => {
+                        alert('Error recognizing speech');
+                    };
+                }, 1000);
+            }
+
+            testNextWord();
+        }
+
+        // Check if the spelling is correct
+        function checkSpelling(word, userSpelling) {
+            const wordElement = [...wordListContainer.children].find(el => el.dataset.word === word);
+            if (userSpelling.toLowerCase() === word.toLowerCase()) {
+                wordElement.classList.add('correct');
+            } else {
+                wordElement.classList.add('incorrect');
+            }
+        }
+
+        // Function to end the test early
+        function endTest() {
+            wordListContainer.style.display = 'block';  // Show word list again
+            wordDefinition.innerHTML = '';  // Clear the definition
+
+            // Display correct and incorrect words for 20 seconds
+            setTimeout(() => {
+                [...wordListContainer.children].forEach(wordElement => {
+                    wordElement.classList.remove('correct', 'incorrect');
+                });
+            }, 20000);
+        }
+
+        // Event listeners for buttons
+        readAllButton.addEventListener('click', readAllWords);
+        testOrderButton.addEventListener('click', () => startTest(false));
+        testRandomButton.addEventListener('click', () => startTest(true));
+    </script>
+</body>
+</html>
+
