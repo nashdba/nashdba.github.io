@@ -125,6 +125,8 @@
         const endTestButton = document.getElementById('end-test-button');
         let wordListData = [];
         let isReading = false;  // Flag to track if reading/spelling is in progress
+        let currentIndex = 0;
+        let isReadingAllWords = false;  // New flag to track the "Read All Words" process
         let correctWords = [];
         let incorrectWords = [];
 
@@ -174,7 +176,7 @@
 
                 // Add click listener to each word item
                 wordElement.addEventListener('click', () => {
-                    if (!isReading) {  // Only allow clicking if a word is not being read/spelled
+                    if (!isReading && !isReadingAllWords) {  // Prevent clicks if reading or 'Read All' is in progress
                         isReading = true;  // Set the flag to prevent other selections
                         highlightWord(wordElement);
                         showDefinition(wordElement);
@@ -235,38 +237,43 @@
 
         // Function to read all words for the selected week
         function readAllWords() {
-            let index = 0;
-            isReading = true;  // Prevent other selections
-            readAllButton.disabled = true;  // Disable the read-all button during the reading
+            if (isReadingAllWords) return;  // Prevent if already reading
 
+            isReadingAllWords = true;  // Set the flag to prevent multiple clicks
+            readAllButton.disabled = true;  // Disable the "Read All Words" button
             endReadingButton.style.display = 'inline-block';  // Show the "End Reading" button
 
-            function nextWord() {
-                if (index < wordListData.length) {
-                    const word = wordListData[index].word;
-                    speakWord(word);
-                    highlightWord(wordListContainer.children[index]);
-                    showDefinition(wordListContainer.children[index]);
-                    setTimeout(nextWord, 3300);  // 0.3s longer delay between words
-                    index++;
-                } else {
-                    isReading = false;  // Allow selection after all words are read
-                    readAllButton.disabled = false;  // Re-enable the read-all button
-                    endReadingButton.style.display = 'none';  // Hide the "End Reading" button
-                }
-            }
-
-            nextWord();
+            currentIndex = 0;
+            readNextWord();
         }
 
-        // Button listeners
-        readAllButton.addEventListener('click', readAllWords);
+        // Function to read the next word in the list
+        function readNextWord() {
+            if (currentIndex >= wordListData.length) {
+                isReadingAllWords = false;  // Reset the flag once all words have been read
+                readAllButton.disabled = false;  // Re-enable the "Read All Words" button
+                endReadingButton.style.display = 'none';  // Hide the "End Reading" button
+                return;
+            }
 
-        // Function to end reading early
+            const word = wordListData[currentIndex].word;
+            speakWord(word);
+            highlightWord(wordListContainer.children[currentIndex]);
+            showDefinition(wordListContainer.children[currentIndex]);
+
+            setTimeout(() => {
+                spellWord(word, wordListContainer.children[currentIndex]);
+                currentIndex++;
+                setTimeout(readNextWord, 3300);  // 0.3s longer delay between words
+            }, 2000); // Wait for the word to be spoken before spelling
+        }
+
+        // Function to end the reading of all words early
         function endReading() {
-            isReading = false;
-            readAllButton.disabled = false;  // Re-enable the read-all button
+            isReadingAllWords = false;  // Reset flag
+            readAllButton.disabled = false;  // Re-enable "Read All Words"
             endReadingButton.style.display = 'none';  // Hide the "End Reading" button
+            speechSynthesis.cancel();  // Stop current speech synthesis
         }
 
         // Test buttons listeners
@@ -278,6 +285,8 @@
             // Logic to end the test (e.g., show feedback or reset)
         }
 
+        // Initialize everything on page load
+        populateWeekSelector();
     </script>
 
 </body>
