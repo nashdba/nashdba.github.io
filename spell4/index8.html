@@ -238,16 +238,11 @@
 
             function spellNextLetter() {
                 if (letterIndex < letters.length) {
-                    const utterance = new SpeechSynthesisUtterance(letters[letterIndex]);
+                    const letter = letters[letterIndex];
+                    const utterance = new SpeechSynthesisUtterance(letter);
                     speechSynthesis.speak(utterance);
                     letterIndex++;
-                    setTimeout(spellNextLetter, 500);  // Delay between letters
-                } else {
-                    // After spelling is done, allow user to select another word
-                    setTimeout(() => {
-                        isReading = false;  // Reset the flag to allow the next selection
-                        highlightWord(wordElement);  // Re-highlight the word if needed
-                    }, 1000);
+                    setTimeout(spellNextLetter, 1000);
                 }
             }
 
