@@ -125,10 +125,8 @@
         const endTestButton = document.getElementById('end-test-button');
         let wordListData = [];
         let isReading = false;  // Flag to track if reading/spelling is in progress
+        let isReadingAllWords = false;  // Flag for "Read All Words" process
         let currentIndex = 0;
-        let isReadingAllWords = false;  // New flag to track the "Read All Words" process
-        let correctWords = [];
-        let incorrectWords = [];
 
         // Fetch word data from external JSON file
         fetch('terms/terms.json')
@@ -231,16 +229,16 @@
 
         // Function to show the definition of the selected word
         function showDefinition(wordElement) {
-            wordDefinition.textContent = wordElement.dataset.definition;
             wordDefinitionTitle.style.display = 'block';
+            wordDefinition.textContent = wordElement.dataset.definition;
         }
 
-        // Function to read all words for the selected week
+        // Function to read all words in the list
         function readAllWords() {
-            if (isReadingAllWords) return;  // Prevent if already reading
+            if (isReading || isReadingAllWords) return;  // Prevent reading if already in progress
 
-            isReadingAllWords = true;  // Set the flag to prevent multiple clicks
-            readAllButton.disabled = true;  // Disable the "Read All Words" button
+            isReadingAllWords = true;
+            readAllButton.disabled = true;  // Disable the button to prevent multiple clicks
             endReadingButton.style.display = 'inline-block';  // Show the "End Reading" button
 
             currentIndex = 0;
