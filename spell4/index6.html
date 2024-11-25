@@ -170,11 +170,10 @@
                 wordElement.addEventListener('click', () => {
                     if (!isReading) {  // Only allow clicking if a word is not being read/spelled
                         isReading = true;  // Set the flag to prevent other selections
-                        disableWordClicks();  // Disable clicks on other words
                         highlightWord(wordElement);
                         showDefinition(wordElement);
                         speakWord(wordElement.dataset.word);
-                        spellWord(wordElement.dataset.word);
+                        spellWord(wordElement.dataset.word, wordElement);
                     }
                 });
             });
@@ -190,14 +189,10 @@
         function speakWord(word) {
             const utterance = new SpeechSynthesisUtterance(word);
             speechSynthesis.speak(utterance);
-            utterance.onend = () => {  // Once speaking ends, allow the next word selection
-                isReading = false;
-                enableWordClicks();  // Re-enable word clicks
-            };
         }
 
         // Function to spell a word
-        function spellWord(word) {
+        function spellWord(word, wordElement) {
             const letters = word.split('');
             let letterIndex = 0;
 
@@ -208,9 +203,11 @@
                     letterIndex++;
                     setTimeout(spellNextLetter, 500);  // Delay between letters
                 } else {
-                    // After spelling is done, re-enable clicking for other words
-                    isReading = false;
-                    enableWordClicks();
+                    // After spelling is done, allow user to select another word
+                    setTimeout(() => {
+                        isReading = false;  // Reset the flag to allow the next selection
+                        highlightWord(wordElement);  // Re-highlight the word if needed
+                    }, 1000);
                 }
             }
 
@@ -230,27 +227,10 @@
             wordDefinitionTitle.style.display = 'block';
         }
 
-        // Function to disable clicks on other words
-        function disableWordClicks() {
-            const wordItems = document.querySelectorAll('.word-item');
-            wordItems.forEach(item => {
-                item.style.pointerEvents = 'none';  // Disable pointer events (clicks)
-            });
-        }
-
-        // Function to enable clicks on all words again
-        function enableWordClicks() {
-            const wordItems = document.querySelectorAll('.word-item');
-            wordItems.forEach(item => {
-                item.style.pointerEvents = 'auto';  // Re-enable pointer events
-            });
-        }
-
         // Function to read all words for the selected week
         function readAllWords() {
             let index = 0;
             isReading = true;  // Prevent other selections
-            disableWordClicks();  // Disable clicks on all words
 
             function nextWord() {
                 if (index < wordListData.length) {
@@ -261,8 +241,7 @@
                     setTimeout(nextWord, 3300);  // 0.3s longer delay between words
                     index++;
                 } else {
-                    isReading = false;
-                    enableWordClicks();  // Re-enable word clicks after reading all
+                    isReading = false;  // Allow selection after all words are read
                 }
             }
 
