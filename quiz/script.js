@@ -163,7 +163,16 @@ function showQuizOverMessage() {
     restartButton.textContent = "Start a New Quiz";
     restartButton.style.backgroundColor = 'blue';  // Set background color
     restartButton.style.color = 'white';           // Set text color
-    restartButton.style.fontSize = '18px';
+
+    restartButton.style.position = "fixed";  // Fix position at the bottom of the page
+    restartButton.style.bottom = "20px";     // Position it 20px from the bottom
+    restartButton.style.padding = "10px 20px";  // Add padding (top/bottom, left/right)
+    restartButton.style.fontSize = "18px";   // Set font size
+    restartButton.style.border = 'none';     // Remove border
+    restartButton.style.cursor = 'pointer';  // Set cursor to pointer for clickability
+    restartButton.style.borderRadius = '10px';  // Round the corners
+    restartButton.style.maxWidth = '200px';  // Limit width on small screens
+    restartButton.style.display = 'none';    // Initially hidden (set to 'block' later)
     
     
     restartButton.onclick = resetApp;
