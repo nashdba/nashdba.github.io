@@ -146,7 +146,7 @@ function showNextQuestion(questions) {
         // while loop to keep picking questions which have not been asked yet
       do {
         currentQuestionIndex = getRandomInt(0, questions.length); //pick random Q that not had yet
-          } while (askedQuestions.has(currentQuestionIndex);
+          } while (askedQuestions.has(currentQuestionIndex));
         numQuestionsInTest++; // Increment the question in test counter
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 4500); // Show answer after 3 seconds
