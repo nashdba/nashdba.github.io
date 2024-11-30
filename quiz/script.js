@@ -161,7 +161,6 @@ function showQuizOverMessage() {
     // Optionally, you could add a button to restart the quiz or go back to the home screen
     const restartButton = document.createElement('button');
     restartButton.textContent = "Start a New Quiz";
-    restartButton.style.fontSize = '18px';
     restartButton.style.backgroundColor = 'blue';  // Set background color
     restartButton.style.color = 'white';           // Set text color
     
