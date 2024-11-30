@@ -145,7 +145,7 @@ function showNextQuestion(questions) {
         // Move to the next question after a short delay
         // while loop to keep picking questions which have not been asked yet
       do {
-        currentQuestionIndex = getRandomInt(0, questions.length); //pick random Q that not had yet
+           currentQuestionIndex = getRandomInt(0, questions.length); //pick random Q that not had yet
           } while (askedQuestions.has(currentQuestionIndex));
         numQuestionsInTest++; // Increment the question in test counter
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
@@ -161,8 +161,10 @@ function showQuizOverMessage() {
     // Optionally, you could add a button to restart the quiz or go back to the home screen
     const restartButton = document.createElement('button');
     restartButton.textContent = "Start a New Quiz";
+    restartButton.style.fontsize = 18px;
     restartButton.style.backgroundColor = 'blue';  // Set background color
     restartButton.style.color = 'white';           // Set text color
+    
     restartButton.onclick = resetApp;
     questionArea.appendChild(restartButton);
 
