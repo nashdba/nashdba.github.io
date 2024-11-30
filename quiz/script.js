@@ -175,6 +175,17 @@ function showQuizOverMessage() {
     // restartButton.style.display = 'none';    // Initially hidden (set to 'block' later)  
     
     restartButton.setAttribute('id', 'RestartQuizBtn');
+
+    // Event listeners for mouse hover
+    restartButton.addEventListener('mouseover', function() {
+      restartButton.style.backgroundColor = 'darkblue'; // Change background color on hover
+      restartButton.style.color = 'white';            // Change text color on hover
+    });
+
+    restartButton.addEventListener('mouseout', function() {
+      restartButton.style.backgroundColor = 'blue';    // Revert background color when hover ends
+      restartButton.style.color = 'white';             // Revert text color
+    });
     
     restartButton.onclick = resetApp;
     questionArea.appendChild(restartButton);
