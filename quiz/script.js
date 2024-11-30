@@ -163,6 +163,7 @@ function showQuizOverMessage() {
     restartButton.textContent = "Start a New Quiz";
     restartButton.style.backgroundColor = 'blue';  // Set background color
     restartButton.style.color = 'white';           // Set text color
+    restartButton.style.fontSize = '18px';
     
     
     restartButton.onclick = resetApp;
