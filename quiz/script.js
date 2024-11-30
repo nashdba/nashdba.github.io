@@ -174,6 +174,7 @@ function showQuizOverMessage() {
     restartButton.style.maxWidth = '200px';  // Limit width on small screens
     restartButton.style.display = 'none';    // Initially hidden (set to 'block' later)
     
+    restartButton.setAttribute('id', 'RestartQuizBtn');
     
     restartButton.onclick = resetApp;
     questionArea.appendChild(restartButton);
