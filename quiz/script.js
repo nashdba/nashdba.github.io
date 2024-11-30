@@ -172,7 +172,7 @@ function showQuizOverMessage() {
     restartButton.style.cursor = 'pointer';  // Set cursor to pointer for clickability
     restartButton.style.borderRadius = '10px';  // Round the corners
     restartButton.style.maxWidth = '200px';  // Limit width on small screens
-    restartButton.style.display = 'none';    // Initially hidden (set to 'block' later)
+    // restartButton.style.display = 'none';    // Initially hidden (set to 'block' later)  
     
     restartButton.setAttribute('id', 'RestartQuizBtn');
     
