@@ -156,7 +156,7 @@ function showNextQuestion(questions) {
 function showQuizOverMessage() {
     const questionArea = document.getElementById("questionArea");
     
-    questionArea.innerHTML = "<h2>Quiz Over!</h2>";
+    questionArea.innerHTML = "<h2>Quiz Over!</h2></br></br>";
 
     // Optionally, you could add a button to restart the quiz or go back to the home screen
     const restartButton = document.createElement('button');
