@@ -164,7 +164,7 @@ function showQuizOverMessage() {
     restartButton.style.backgroundColor = 'blue';  // Set background color
     restartButton.style.color = 'white';           // Set text color
 
-    restartButton.style.position = "fixed";  // Fix position at the bottom of the page
+    restartButton.style.position = "relative";  // Fix position at the bottom of the page
     restartButton.style.bottom = "20px";     // Position it 20px from the bottom
     restartButton.style.padding = "10px 20px";  // Add padding (top/bottom, left/right)
     restartButton.style.fontSize = "18px";   // Set font size
