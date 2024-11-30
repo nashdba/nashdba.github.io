@@ -5,6 +5,7 @@ let isQuizInProgress = false; // Flag to track if a quiz is in progress
 let questionTimeout; // Store the timeout ID to clear it when ending the quiz
 let answerTimeout; // Store the timeout ID for showing the answer
 
+let askedQuestions = new Set(); //track questions asked
 let numQuestionsInTest; 
 const MAXNUMQUESTIONSINTEST = 10; 
 
@@ -86,6 +87,7 @@ function startQuiz(quizName) {
 
     currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
     numQuestionsInTest = 1; // resets the questons counter
+    askedQuestions.clear(); // reset the questions asked tracker
 
 
     // If the selected quiz doesn't exist, show an error
@@ -118,6 +120,8 @@ function showNextQuestion(questions) {
         return;
     }
 
+    askedQuestions.add(currentQuestionIndex); //add the question to the asked list
+  
     const question = questions[currentQuestionIndex]; // Get the current question
     const questionArea = document.getElementById("questionArea");
 
@@ -139,8 +143,11 @@ function showNextQuestion(questions) {
         speak(question.answer);
         
         // Move to the next question after a short delay
-        currentQuestionIndex = getRandomInt(0, questions.length); // Increment the question index
-        numQuestionsInTest++;
+        // while loop to keep picking questions which have not been asked yet
+      do {
+        currentQuestionIndex = getRandomInt(0, questions.length); //pick random Q that not had yet
+          } while (askedQuestions.has(currentQuestionIndex);
+        numQuestionsInTest++; // Increment the question in test counter
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
     }, 4500); // Show answer after 3 seconds
 }
