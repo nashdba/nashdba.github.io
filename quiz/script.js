@@ -170,7 +170,7 @@ function showQuizOverMessage() {
   
     const quizOverMessageStr = ${quizOverMessage[getRandomInt(0, quizOverMessage.length)]};
     
-    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br>${quizOverMessageStr}<h3></h3>';
+    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br><h3>'${quizOverMessageStr}'</h3>';
 
   
 
