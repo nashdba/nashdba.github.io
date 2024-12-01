@@ -152,7 +152,7 @@ function showNextQuestion(questions) {
           } while (askedQuestions.has(currentQuestionIndex));
         numQuestionsInTest++; // Increment the question in test counter
         questionTimeout = setTimeout(() => showNextQuestion(questions), 3000); // Show next question after 3 seconds
-    }, 4500); // Show answer after 3 seconds
+    }, 6000); // Show answer after 6 seconds
 }
 
 // Show a message when the quiz is over
