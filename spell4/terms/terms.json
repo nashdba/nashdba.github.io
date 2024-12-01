@@ -20,30 +20,55 @@
         }
     ],
     "week3": [
-    { "word": "usual", "definition": "Commonly occurring or done; normal." },
-    { "word": "treasure", "definition": "A collection of valuable items, often gold or jewels." },
-    { "word": "Asia", "definition": "The largest continent on Earth, located primarily in the Eastern and Northern Hemispheres." },
-    { "word": "conclusion", "definition": "The end or final part of something; a decision or judgment reached after considering facts." },
-    { "word": "night", "definition": "The time of day when it is dark outside, typically from sunset to sunrise." },
-    { "word": "blue", "definition": "A color that is between green and violet on the spectrum of visible light." },
-    { "word": "there", "definition": "Refers to a location or place (e.g., 'over there')." },
-    { "word": "their", "definition": "A possessive form of 'they', used to show ownership (e.g., 'their house')." },
-    { "word": "span", "definition": "The full extent or range of something, or a period of time." },
-    { "word": "alive", "definition": "Living; not dead." },
-    { "word": "dead", "definition": "No longer alive; the opposite of alive." }
-  ],
+        { "word": "usual", "definition": "Commonly occurring or done; normal." },
+        { "word": "treasure", "definition": "A collection of valuable items, often gold or jewels." },
+        { "word": "Asia", "definition": "The largest continent on Earth, located primarily in the Eastern and Northern Hemispheres." },
+        { "word": "conclusion", "definition": "The end or final part of something; a decision or judgment reached after considering facts." },
+        { "word": "night", "definition": "The time of day when it is dark outside, typically from sunset to sunrise." },
+        { "word": "blue", "definition": "A color that is between green and violet on the spectrum of visible light." },
+        { "word": "there", "definition": "Refers to a location or place (e.g., 'over there')." },
+        { "word": "their", "definition": "A possessive form of 'they', used to show ownership (e.g., 'their house')." },
+        { "word": "span", "definition": "The full extent or range of something, or a period of time." },
+        { "word": "alive", "definition": "Living; not dead." },
+        { "word": "dead", "definition": "No longer alive; the opposite of alive." }
+    ],
     "week4": [
-    { "word": "World", "definition": "The planet we live on, or the people and things in it." },
-    { "word": "worst", "definition": "The least good or most bad; the opposite of best." },
-    { "word": "warmer", "definition": "Having a higher temperature than something else; not cold." },
-    { "word": "award", "definition": "A prize or recognition given for achievement." },
-    { "word": "pair", "definition": "Two things that are the same or match." },
-    { "word": "pear", "definition": "A sweet fruit that is typically green or yellow with a round shape that narrows toward the stem." },
-    { "word": "two", "definition": "The number that comes after one and before three." },
-    { "word": "to", "definition": "A preposition used to indicate direction, place, or position." },
-    { "word": "butterfly", "definition": "A type of insect with large, colorful wings and a slender body." },
-    { "word": "arm span", "definition": "The distance from the tip of one hand to the tip of the other hand when the arms are stretched out." },
-    { "word": "lion", "definition": "A large wild cat with a golden-brown coat, known as the 'king of the jungle.'" }
-  ]
+        { "word": "World", "definition": "The planet we live on, or the people and things in it." },
+        { "word": "worst", "definition": "The least good or most bad; the opposite of best." },
+        { "word": "warmer", "definition": "Having a higher temperature than something else; not cold." },
+        { "word": "award", "definition": "A prize or recognition given for achievement." },
+        { "word": "pair", "definition": "Two things that are the same or match." },
+        { "word": "pear", "definition": "A sweet fruit that is typically green or yellow with a round shape that narrows toward the stem." },
+        { "word": "two", "definition": "The number that comes after one and before three." },
+        { "word": "to", "definition": "A preposition used to indicate direction, place, or position." },
+        { "word": "butterfly", "definition": "A type of insect with large, colorful wings and a slender body." },
+        { "word": "arm span", "definition": "The distance from the tip of one hand to the tip of the other hand when the arms are stretched out." },
+        { "word": "lion", "definition": "A large wild cat with a golden-brown coat, known as the 'king of the jungle.'" }
+    ],
+    "week5": [
+        { "word": "Monday", "definition": "The first day of the week in many calendars." },
+        { "word": "month", "definition": "A period of time roughly equal to one-twelfth of a year." },
+        { "word": "vision", "definition": "The ability to see, or a mental image of the future." },
+        { "word": "measure", "definition": "To determine the size, amount, or degree of something using a standard unit." },
+        { "word": "wrap", "definition": "To cover or enclose something with material." },
+        { "word": "written", "definition": "Past participle of 'write'; expressed in writing." },
+        { "word": "friend", "definition": "A person with whom one has a mutual bond of affection." },
+        { "word": "ask", "definition": "To request information, permission, or an answer." },
+        { "word": "Roman", "definition": "Relating to ancient Rome or its people." },
+        { "word": "leader", "definition": "A person who leads or commands a group, organization, or country." },
+        { "word": "Rome", "definition": "The capital city of Italy, and a historical center of ancient civilization." }
+    ],
+    "week6": [
+        { "word": "move", "definition": "To change position or go from one place to another." },
+        { "word": "improve", "definition": "To make something better or enhance its quality." },
+        { "word": "who", "definition": "A pronoun used to ask or refer to a person or people." },
+        { "word": "whole", "definition": "All of something; entire." },
+        { "word": "great", "definition": "Of an extent, amount, or intensity considerably above average." },
+        { "word": "break", "definition": "To separate into pieces, often by force." },
+        { "word": "where", "definition": "A question or reference to a place or location." },
+        { "word": "your", "definition": "Possessive form of 'you'; indicating something belonging to you." },
+        { "word": "producer", "definition": "An individual or organization that creates or supplies goods or services." },
+        { "word": "consumer", "definition": "A person who purchases and uses goods or services." },
+        { "word": "predator", "definition": "An animal that preys on and eats other animals for survival." }
+    ]
 }
-
