@@ -176,6 +176,9 @@ function showQuizOverMessage() {
     // Remove the "End Quiz" button
     document.getElementById('endQuizBtn').style.display = 'none';
 
+    // Reset Progress
+    isQuizInProgress = false; // Reset the flag to allow starting a new quiz
+
   
 
   /* Commented out the Start New Quiz Buutton as not needed
