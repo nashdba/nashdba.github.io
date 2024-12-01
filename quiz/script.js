@@ -165,12 +165,12 @@ function showQuizOverMessage() {
     "Ready for another one?",
     "Pick a new quiz.",
     "What topic will you try next?",
-    "What topic will you pick next?"
+    "What quiz will you pick next?"
     ];
   
     const quizOverMessageStr = quizOverMessage[getRandomInt(0, quizOverMessage.length)];
     
-    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br><h3>'$quizOverMessageStr'</h3>';
+    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br><h3>What quiz will you pick next?</h3>';
 
   
 
