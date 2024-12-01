@@ -169,8 +169,9 @@ function showQuizOverMessage() {
     ];
   
     const quizOverMessageStr = quizOverMessage[getRandomInt(0, quizOverMessage.length)];
+    //need to put this string in html
     
-    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br><h3>What quiz will you pick next?</h3>';
+    questionArea.innerHTML = '<h2>Quiz Over!</h2></br><h3>What quiz will you pick next?</h3>';
 
   
 
