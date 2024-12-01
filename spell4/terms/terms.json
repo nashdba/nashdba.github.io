@@ -1,15 +1,5 @@
 {
-    "week1": [
-        {
-            "word": "apple",
-            "definition": "A fruit that is typically round and red, green, or yellow in color."
-        },
-        {
-            "word": "ball",
-            "definition": "A spherical object used in games and sports."
-        }
-    ],
-    "week2": [
+    "week0": [
         {
             "word": "cat",
             "definition": "A small domesticated carnivorous mammal with soft fur."
@@ -19,7 +9,7 @@
             "definition": "A domesticated carnivorous mammal with a barking sound."
         }
     ],
-    "week3": [
+    "week1": [
         { "word": "usual", "definition": "Commonly occurring or done; normal." },
         { "word": "treasure", "definition": "A collection of valuable items, often gold or jewels." },
         { "word": "Asia", "definition": "The largest continent on Earth, located primarily in the Eastern and Northern Hemispheres." },
@@ -32,7 +22,7 @@
         { "word": "alive", "definition": "Living; not dead." },
         { "word": "dead", "definition": "No longer alive; the opposite of alive." }
     ],
-    "week4": [
+    "week2": [
         { "word": "World", "definition": "The planet we live on, or the people and things in it." },
         { "word": "worst", "definition": "The least good or most bad; the opposite of best." },
         { "word": "warmer", "definition": "Having a higher temperature than something else; not cold." },
@@ -44,6 +34,29 @@
         { "word": "butterfly", "definition": "A type of insect with large, colorful wings and a slender body." },
         { "word": "arm span", "definition": "The distance from the tip of one hand to the tip of the other hand when the arms are stretched out." },
         { "word": "lion", "definition": "A large wild cat with a golden-brown coat, known as the 'king of the jungle.'" }
+    ],
+    "week3": [
+        {
+            "word": "apple",
+            "definition": "A fruit that is typically round and red, green, or yellow in color."
+        },
+        {
+            "word": "ball",
+            "definition": "A spherical object used in games and sports."
+        }
+    ],
+    "week4": [
+        { "word": "range", "definition": "The extent or scope of something." },
+        { "word": "exchange", "definition": "The act of giving one thing and receiving another in return." },
+        { "word": "known", "definition": "Recognized, familiar, or within one's knowledge." },
+        { "word": "knight", "definition": "A man granted an honorary title of knighthood for service or achievement." },
+        { "word": "trolley", "definition": "A wheeled vehicle used for carrying items, often in shops or luggage at stations." },
+        { "word": "donkey", "definition": "A domesticated hoofed mammal used as a working animal." },
+        { "word": "have", "definition": "To possess, own, or hold." },
+        { "word": "thanks", "definition": "An expression of gratitude." },
+        { "word": "inanimate", "definition": "Not alive, especially not in the manner of animals and humans." },
+        { "word": "dormant", "definition": "In a state of rest or inactivity." },
+        { "word": "orchestra", "definition": "A large group of musicians who play various instruments together." }
     ],
     "week5": [
         { "word": "Monday", "definition": "The first day of the week in many calendars." },
