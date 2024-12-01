@@ -351,7 +351,7 @@
     { "question": "What 'H' is a bird that can be found in the UK?", "answer": "Heron" },
     { "question": "What 'K' is a type of bird with a colorful beak?", "answer": "Kingfisher" },
     { "question": "What 'L' is a type of animal that lives in a pride?", "answer": "Lion" },
-    { "question": "What 'M' is a type of animal known for its long neck?", "answer": "Giraffe" },
+    { "question": "What 'G' is a type of animal known for its long neck?", "answer": "Giraffe" },
     { "question": "What 'N' is a type of animal that tends to come out at night time?", "answer": "Nocturnal" },
     { "question": "What 'O' is a type of fruit that is orange?", "answer": "Orange" },
     { "question": "What 'P' is a bird that loves the ocean?", "answer": "Penguin" },
@@ -379,8 +379,21 @@
     { "question": "What 'E' is an animal with a long trunk?", "answer": "Elephant" },
     { "question": "What 'N' is the sound a horse makes?", "answer": "Neigh" },
     { "question": "What 'C' is the name of a farmyard animal that often clucks?", "answer": "Chicken" },
-    { "question": "What 'BB' is a famous pirate?", "answer": "Black Beard" }
-   ]
+    { "question": "What 'BB' is a famous pirate?", "answer": "Black Beard" },
+    { "question": "What 'S' is a type of animal known for its slow movement and shell?", "answer": "Snail" },
+    { "question": "What 'K' is an animal that can be found in Australia and is famous for its jump?", "answer": "Kangaroo" },
+    { "question": "What 'O' is a type of animal that lives under the sea and has eight tentacles?", "answer": "Octopus" },
+    { "question": "What 'B' is a type of insect that makes a buzzing sound and helps pollinate flowers?", "answer": "Bee" },
+    { "question": "What 'M' is a large mammal known for its tusks, and hariy or wooly skin?", "answer": "Mammoth" },
+    { "question": "What 'B' is a type of animal known for its large size and strength?", "answer": "Bear" },
+    { "question": "What 'F' is a type of small animal known for its ability to hop?", "answer": "Frog" },
+    { "question": "What 'I' is a type of animal known for its long, skinny body and ability to climb?", "answer": "Iguana" },
+    { "question": "What 'P' is a type of bird known for its intelligence and ability to mimic sounds?", "answer": "Parrot" },
+    { "question": "What 'O' is a type of tree that produces acorns?", "answer": "Oak" },
+    { "question": "What 'P' is a tree that grows in a tropical climate and produces a large fruit?", "answer": "Papaya" },
+    { "question": "What 'G' is an animal that is known for its long neck?", "answer": "Giraffe" },
+    { "question": "What 'W' is a large animal that lives in the ocean?", "answer": "Whale" }
+    ]
     },
     {
         "name": "Maths",
