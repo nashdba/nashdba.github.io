@@ -173,6 +173,9 @@ function showQuizOverMessage() {
     
     questionArea.innerHTML = '<h2>Quiz Over!</h2></br><h3>What quiz will you pick next?</h3>';
 
+    // Remove the "End Quiz" button
+    document.getElementById('endQuizBtn').style.display = 'none';
+
   
 
   /* Commented out the Start New Quiz Buutton as not needed
