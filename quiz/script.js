@@ -79,6 +79,8 @@ function startQuiz(quizName) {
         return;
     }
 
+    resetApp(); //resets everything
+
     isQuizInProgress = true; // Set the flag to true indicating quiz is in progress
     currentQuiz = quizName;
     
@@ -86,8 +88,9 @@ function startQuiz(quizName) {
     const selectedQuiz = quizData.find(quiz => quiz.name === quizName);
 
     currentQuestionIndex = getRandomInt(0, selectedQuiz.questions.length); // Reset question index
-    numQuestionsInTest = 1; // resets the questons counter
-    askedQuestions.clear(); // reset the questions asked tracker
+    //moved to reset quiz
+    //numQuestionsInTest = 1; // resets the questons counter
+    //askedQuestions.clear(); // reset the questions asked tracker
 
 
     // If the selected quiz doesn't exist, show an error
@@ -158,6 +161,7 @@ function showQuizOverMessage() {
     
     questionArea.innerHTML = "<h2>Quiz Over!</h2></br></br>";
 
+  /* Commented out the Start New Quiz Buutton as not needed
     // Optionally, you could add a button to restart the quiz or go back to the home screen
     const restartButton = document.createElement('button');
     restartButton.textContent = "Start a New Quiz";
@@ -192,6 +196,7 @@ function showQuizOverMessage() {
 
     // Reset the flag to allow starting a new quiz
     isQuizInProgress = false;
+*/
 }
 
 // Handle the "End Quiz" button click
@@ -215,6 +220,9 @@ function resetApp() {
     currentQuiz = '';
     currentQuestionIndex = 0; // Reset question index to 0
     isQuizInProgress = false; // Reset the flag to allow starting a new quiz
+
+    numQuestionsInTest = 1; // resets the questons counter
+    askedQuestions.clear(); // reset the questions asked tracker
 
     // Optionally, you can reset the question display area (in case a previous quiz is still open)
     document.getElementById("questionArea").innerHTML = '';
