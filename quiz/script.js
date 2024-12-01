@@ -159,7 +159,18 @@ function showNextQuestion(questions) {
 function showQuizOverMessage() {
     const questionArea = document.getElementById("questionArea");
     
-    questionArea.innerHTML = "<h2>Quiz Over!</h2></br></br>";
+    const quizOverMessage = [
+    "Try another?",
+    "Let's do another!",
+    "Ready for another one?",
+    "Pick a new quiz.",
+    "What topic will you try next?",
+    "What topic will you pick next?"
+    ];
+  
+    i = getRandomInt(0, quizOverMessage.length);
+    
+    questionArea.innerHTML = '<h2>Quiz Over!</h2></br></br><h3>${quizOverMessage[i]}</h3>';
 
   /* Commented out the Start New Quiz Buutton as not needed
     // Optionally, you could add a button to restart the quiz or go back to the home screen
