@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noughts and Crosses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            width: 100%;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-title {
+            font-size: 24px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .navbar-players {
+            font-size: 16px;
+            position: absolute;
+            right: 20px;
+        }
+        .header {
+            text-align: center;
+            margin: 80px 0 20px;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #000;
+            cursor: pointer;
+        }
+        .cell.taken {
+            cursor: not-allowed;
+        }
+        .controls, .scoreboard {
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title">Noughts and Crosses</div>
+        <div class="navbar-players" id="navbar-players">Players: </div>
+    </div>
+    <div class="header">
+        <h1>Set Up Your Game</h1>
+        <div>
+            <input id="player1" type="text" placeholder="Player 1 Name (X)" />
+            <input id="player2" type="text" placeholder="Player 2 Name (O)" />
+            <button onclick="startGame()">Start Game</button>
+        </div>
+    </div>
+    <div class="game-board" id="game-board"></div>
+    <div class="controls">
+        <button id="restart" onclick="restartGame()">Restart Game</button>
+    </div>
+    <div class="scoreboard">
+        <p id="score">Scores: X: 0, O: 0</p>
+        <p id="winner"></p>
+    </div>
+
+    <script>
+        let board = ["", "", "", "", "", "", "", "", ""];
+        let currentPlayer = "X";
+        let scores = { X: 0, O: 0 };
+        let gameOver = false;
+        let player1 = "";
+        let player2 = "";
+
+        function createBoard() {
+            const gameBoard = document.getElementById("game-board");
+            gameBoard.innerHTML = ""; // Clear the board
+            board.forEach((cell, index) => {
+                const div = document.createElement("div");
+                div.classList.add("cell");
+                div.addEventListener("click", () => makeMove(index));
+                div.textContent = cell;
+                gameBoard.appendChild(div);
+            });
+        }
+
+        function makeMove(index) {
+            if (gameOver || board[index] !== "") return;
+            board[index] = currentPlayer;
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            checkWinner();
+            createBoard();
+        }
+
+        function checkWinner() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6] // Diagonals
+            ];
+
+            for (const combo of winningCombos) {
+                const [a, b, c] = combo;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    gameOver = true;
+                    scores[board[a]] += 1;
+                    document.getElementById("winner").textContent = `${board[a]} Wins!`;
+                    updateScore();
+                    return;
+                }
+            }
+
+            if (!board.includes("")) {
+                gameOver = true;
+                document.getElementById("winner").textContent = "It's a Tie!";
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("score").textContent = `Scores: X: ${scores.X}, O: ${scores.O}`;
+        }
+
+        function restartGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            currentPlayer = "X";
+            gameOver = false;
+            document.getElementById("winner").textContent = "";
+            createBoard();
+        }
+
+        function startGame() {
+            player1 = document.getElementById("player1").value || "Player 1";
+            player2 = document.getElementById("player2").value || "Player 2";
+            document.getElementById("navbar-players").textContent = `Players: ${player1} (X) vs ${player2} (O)`;
+            restartGame();
+        }
+
+        // Initialize board on page load
+        createBoard();
+    </script>
+</body>
+</html>
+
