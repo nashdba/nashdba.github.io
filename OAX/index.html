@@ -114,6 +114,7 @@
     <div class="navbar">
         <div class="navbar-title">Noughts and Crosses</div>
         <div>
+            <a href="#" id="playLink">Play</a>
             <a href="#" id="rulesLink">Rules</a>
             <a href="#" id="aboutLink">About</a>
         </div>
@@ -122,7 +123,7 @@
     <!-- Header Section -->
     <div class="header">
         <h1>Welcome to Noughts and Crosses</h1>
-        <p>Enter player names and start the game!</br>(If you want to play against a robot call one player "AI")</p>
+        <p>Enter player names and start the game!</p>
         <div>
             <input id="player1" type="text" placeholder="Player 1 Name (X)" />
             <input id="player2" type="text" placeholder="Player 2 Name (O)" />
@@ -144,11 +145,18 @@
     </div>
 
     <!-- Modals -->
+    <div id="playModal" class="modal">
+        <div class="modal-content">
+            <h2>Play</h2>
+            <p>This is the Play section. The game will start here.</p>
+            <button class="modal-close" id="closePlayModal">Close</button>
+        </div>
+    </div>
 
     <div id="rulesModal" class="modal">
         <div class="modal-content">
             <h2>Rules</h2>
-            <p>Noughts and Crosses, also known as Tic-Tac-Toe, is a two-player game played on a 3x3 grid. One player uses "X" and the other uses "O." The players take turns placing their respective symbol in an empty square on the grid. The objective is to be the first to form a straight line of three of their symbols, either horizontally, vertically, or diagonally. The game ends when one player successfully completes a line, or when all squares are filled without either player winning, resulting in a draw. Players must strategize their moves to both block their opponent from winning and create their own winning line.</p>
+            <p>This is the Rules section. The game rules will be displayed here.</p>
             <button class="modal-close" id="closeRulesModal">Close</button>
         </div>
     </div>
@@ -156,7 +164,7 @@
     <div id="aboutModal" class="modal">
         <div class="modal-content">
             <h2>About</h2>
-            <p>O and X v.0.01</br></br>Basic Noughts and Crosses game.</p>
+            <p>This is the About section. Information about the game will be shown here.</p>
             <button class="modal-close" id="closeAboutModal">Close</button>
         </div>
     </div>
