@@ -134,12 +134,23 @@
 
         // Initialize players and AI settings
         function initializePlayers() {
-            const player1Name = player1Input.value || 'Player 1';
-            const player2Name = player2Input.value || 'Player 2';
-            isPlayer1Computer = isComputer(player1Name);
-            isPlayer2Computer = isComputer(player2Name);
-            updateScore();
-        }
+        let player1Name = player1Input.value || 'Player 1';
+        let player2Name = player2Input.value || 'Player 2';
+
+    // Enforce rule: only one player can be named "AI"
+    if (player1Name.toLowerCase() === 'ai' && player2Name.toLowerCase() === 'ai') {
+        alert('Only one player can be named "AI". Please change one of the names.');
+        player1Name = 'Player 1';
+        player2Name = 'Player 2';
+        player1Input.value = player1Name;
+        player2Input.value = player2Name;
+    }
+
+    isPlayer1Computer = player1Name.toLowerCase() === 'ai';
+    isPlayer2Computer = player2Name.toLowerCase() === 'ai';
+
+    updateScore();
+}
 
         // Create board cells
         function createBoard() {
