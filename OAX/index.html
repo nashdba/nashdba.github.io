@@ -10,46 +10,46 @@
             margin: 0;
             padding: 0;
             background-color: #f0f8ff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
         }
+
         .navbar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             background-color: #333;
             color: white;
-            width: 100%;
             padding: 10px 20px;
-            box-sizing: border-box;
             position: fixed;
+            width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .navbar-title {
-            font-size: 24px;
-            font-weight: bold;
-            flex-grow: 1;
-            text-align: center;
-        }
-        .navbar-players {
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
             font-size: 16px;
-            position: absolute;
-            right: 20px;
         }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
         .header {
             text-align: center;
-            margin: 80px 0 20px;
+            margin-top: 80px;
+            padding: 20px;
         }
+
         .game-board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-gap: 5px;
-            margin-top: 20px;
+            justify-content: center;
         }
+
         .cell {
             width: 100px;
             height: 100px;
@@ -61,13 +61,16 @@
             border: 2px solid #000;
             cursor: pointer;
         }
+
         .cell.taken {
             cursor: not-allowed;
         }
+
         .controls, .scoreboard {
-            margin-top: 20px;
             text-align: center;
+            margin-top: 20px;
         }
+
         button {
             padding: 10px 15px;
             font-size: 16px;
@@ -76,101 +79,195 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
     <div class="navbar">
         <div class="navbar-title">Noughts and Crosses</div>
-        <div class="navbar-players" id="navbar-players">Players: </div>
+        <div>
+            <a href="#game">Play</a>
+            <a href="#rules">Rules</a>
+            <a href="#about">About</a>
+        </div>
     </div>
+
+    <!-- Header Section -->
     <div class="header">
-        <h1>Set Up Your Game</h1>
+        <h1>Welcome to Noughts and Crosses</h1>
+        <p>Enter player names and start the game!</p>
         <div>
             <input id="player1" type="text" placeholder="Player 1 Name (X)" />
             <input id="player2" type="text" placeholder="Player 2 Name (O)" />
-            <button onclick="startGame()">Start Game</button>
         </div>
     </div>
-    <div class="game-board" id="game-board"></div>
+
+    <!-- Game Board -->
+    <div class="game-board"></div>
+
+    <!-- Controls -->
     <div class="controls">
-        <button id="restart" onclick="restartGame()">Restart Game</button>
+        <button id="restart">Restart Game</button>
     </div>
+
+    <!-- Scoreboard -->
     <div class="scoreboard">
         <p id="score">Scores: X: 0, O: 0</p>
         <p id="winner"></p>
     </div>
 
     <script>
-        let board = ["", "", "", "", "", "", "", "", ""];
-        let currentPlayer = "X";
-        let scores = { X: 0, O: 0 };
-        let gameOver = false;
-        let player1 = "";
-        let player2 = "";
+        const board = document.querySelector('.game-board');
+        const scoreDisplay = document.getElementById('score');
+        const winnerDisplay = document.getElementById('winner');
+        const restartButton = document.getElementById('restart');
+        const player1Input = document.getElementById('player1');
+        const player2Input = document.getElementById('player2');
 
+        let currentPlayer = 'X';
+        let boardState = Array(9).fill(null);
+        let scores = { X: 0, O: 0 };
+
+        function isComputer(playerName) {
+            return playerName.toLowerCase() === 'computer1' || playerName.toLowerCase() === 'computer2';
+        }
+
+        let isPlayer1Computer = false;
+        let isPlayer2Computer = false;
+
+        // Initialize players and AI settings
+        function initializePlayers() {
+            const player1Name = player1Input.value || 'Player 1';
+            const player2Name = player2Input.value || 'Player 2';
+            isPlayer1Computer = isComputer(player1Name);
+            isPlayer2Computer = isComputer(player2Name);
+            updateScore();
+        }
+
+        // Create board cells
         function createBoard() {
-            const gameBoard = document.getElementById("game-board");
-            gameBoard.innerHTML = ""; // Clear the board
-            board.forEach((cell, index) => {
-                const div = document.createElement("div");
-                div.classList.add("cell");
-                div.addEventListener("click", () => makeMove(index));
-                div.textContent = cell;
-                gameBoard.appendChild(div);
+            board.innerHTML = '';
+            boardState = Array(9).fill(null);
+            currentPlayer = 'X';
+            winnerDisplay.textContent = '';
+            for (let i = 0; i < 9; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.dataset.index = i;
+                cell.addEventListener('click', handleCellClick);
+                board.appendChild(cell);
+            }
+        }
+
+        // Handle cell clicks
+        function handleCellClick(e) {
+            const cell = e.target;
+            const index = cell.dataset.index;
+            if (boardState[index] || winnerDisplay.textContent) return;
+
+            boardState[index] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.classList.add('taken');
+
+            if (checkWinner()) {
+                winnerDisplay.textContent = `${currentPlayer} Wins!`;
+                scores[currentPlayer]++;
+                updateScore();
+                return;
+            }
+
+            if (boardState.every(Boolean)) {
+                winnerDisplay.textContent = "It's a draw!";
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            if ((currentPlayer === 'X' && isPlayer1Computer) || (currentPlayer === 'O' && isPlayer2Computer)) {
+                setTimeout(computerMove, 500);
+            }
+        }
+
+        // Automated player logic
+        function computerMove() {
+            const emptyCells = boardState.map((val, index) => (val === null ? index : null)).filter(index => index !== null);
+            if (emptyCells.length === 0) return;
+
+            const opponent = currentPlayer === 'X' ? 'O' : 'X';
+
+            // Try to win
+            for (let index of emptyCells) {
+                boardState[index] = currentPlayer;
+                if (checkWinner()) {
+                    markCell(index);
+                    return;
+                }
+                boardState[index] = null;
+            }
+
+            // Try to block
+            for (let index of emptyCells) {
+                boardState[index] = opponent;
+                if (checkWinner()) {
+                    boardState[index] = currentPlayer;
+                    markCell(index);
+                    return;
+                }
+                boardState[index] = null;
+            }
+
+            // Random move
+            const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            boardState[randomIndex] = currentPlayer;
+            markCell(randomIndex);
+        }
+
+        // Mark a cell for the AI
+        function markCell(index) {
+            const cell = board.querySelector(`.cell[data-index='${index}']`);
+            cell.textContent = currentPlayer;
+            cell.classList.add('taken');
+
+            if (checkWinner()) {
+                winnerDisplay.textContent = `${currentPlayer} Wins!`;
+                scores[currentPlayer]++;
+                updateScore();
+                return;
+            }
+
+            if (boardState.every(Boolean)) {
+                winnerDisplay.textContent = "It's a draw!";
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        }
+
+        // Check for a winner
+        function checkWinner() {
+            const winningCombos = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6],
+            ];
+
+            return winningCombos.some(combo => {
+                const [a, b, c] = combo;
+                return boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c];
             });
         }
 
-        function makeMove(index) {
-            if (gameOver || board[index] !== "") return;
-            board[index] = currentPlayer;
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            checkWinner();
-            createBoard();
-        }
-
-        function checkWinner() {
-            const winningCombos = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-                [0, 4, 8], [2, 4, 6] // Diagonals
-            ];
-
-            for (const combo of winningCombos) {
-                const [a, b, c] = combo;
-                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                    gameOver = true;
-                    scores[board[a]] += 1;
-                    document.getElementById("winner").textContent = `${board[a]} Wins!`;
-                    updateScore();
-                    return;
-                }
-            }
-
-            if (!board.includes("")) {
-                gameOver = true;
-                document.getElementById("winner").textContent = "It's a Tie!";
-            }
-        }
-
+        // Update the scoreboard
         function updateScore() {
-            document.getElementById("score").textContent = `Scores: X: ${scores.X}, O: ${scores.O}`;
+            const player1Name = player1Input.value || 'Player 1';
+            const player2Name = player2Input.value || 'Player 2';
+            scoreDisplay.textContent = `Scores: ${player1Name} (X): ${scores.X}, ${player2Name} (O): ${scores.O}`;
         }
 
-        function restartGame() {
-            board = ["", "", "", "", "", "", "", "", ""];
-            currentPlayer = "X";
-            gameOver = false;
-            document.getElementById("winner").textContent = "";
+        // Restart the game
+        restartButton.addEventListener('click', () => {
+            initializePlayers();
             createBoard();
-        }
+        });
 
-        function startGame() {
-            player1 = document.getElementById("player1").value || "Player 1";
-            player2 = document.getElementById("player2").value || "Player 2";
-            document.getElementById("navbar-players").textContent = `Players: ${player1} (X) vs ${player2} (O)`;
-            restartGame();
-        }
-
-        // Initialize board on page load
-        createBoard();
+        // Initialize the game
+        restartButton.click();
     </script>
 </body>
 </html>
-
