@@ -167,11 +167,12 @@ function showQuizOverMessage() {
     "What topic will you try next?",
     "What quiz will you pick next?"
     ];
-  
+
+    //set a variable to one of the phrases
     const quizOverMessageStr = quizOverMessage[getRandomInt(0, quizOverMessage.length)];
-    //need to put this string in html
-    
-    questionArea.innerHTML = '<h2>Quiz Over!</h2></br><h3>What quiz will you pick next?</h3>';
+
+    //put this string in html
+    questionArea.innerHTML = `<h2>Quiz Over!</h2></br><h3> ${quizOverMessageStr} What quiz will you pick next?</h3>`;
 
     // Remove the "End Quiz" button
     document.getElementById('endQuizBtn').style.display = 'none';
