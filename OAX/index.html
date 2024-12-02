@@ -76,6 +76,37 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -83,16 +114,15 @@
     <div class="navbar">
         <div class="navbar-title">Noughts and Crosses</div>
         <div>
-            <a href="#game">Play</a>
-            <a href="#rules">Rules</a>
-            <a href="#about">About</a>
+            <a href="#" id="rulesLink">Rules</a>
+            <a href="#" id="aboutLink">About</a>
         </div>
     </div>
 
     <!-- Header Section -->
     <div class="header">
         <h1>Welcome to Noughts and Crosses</h1>
-        <p>Enter player names and start the game!</p>
+        <p>Enter player names and start the game!</br>(If you want to play against a robot call one player "AI")</p>
         <div>
             <input id="player1" type="text" placeholder="Player 1 Name (X)" />
             <input id="player2" type="text" placeholder="Player 2 Name (O)" />
@@ -113,6 +143,24 @@
         <p id="winner"></p>
     </div>
 
+    <!-- Modals -->
+
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <h2>Rules</h2>
+            <p>Noughts and Crosses, also known as Tic-Tac-Toe, is a two-player game played on a 3x3 grid. One player uses "X" and the other uses "O." The players take turns placing their respective symbol in an empty square on the grid. The objective is to be the first to form a straight line of three of their symbols, either horizontally, vertically, or diagonally. The game ends when one player successfully completes a line, or when all squares are filled without either player winning, resulting in a draw. Players must strategize their moves to both block their opponent from winning and create their own winning line.</p>
+            <button class="modal-close" id="closeRulesModal">Close</button>
+        </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <h2>About</h2>
+            <p>O and X v.0.01</br></br>Basic Noughts and Crosses game.</p>
+            <button class="modal-close" id="closeAboutModal">Close</button>
+        </div>
+    </div>
+
     <script>
         const board = document.querySelector('.game-board');
         const scoreDisplay = document.getElementById('score');
@@ -125,32 +173,32 @@
         let boardState = Array(9).fill(null);
         let scores = { X: 0, O: 0 };
 
-        function isComputer(playerName) {
-            return playerName.toLowerCase() === 'computer1' || playerName.toLowerCase() === 'computer2';
+        function isAI(playerName) {
+            return playerName.toLowerCase() === 'ai';
         }
 
-        let isPlayer1Computer = false;
-        let isPlayer2Computer = false;
+        let isPlayer1AI = false;
+        let isPlayer2AI = false;
 
         // Initialize players and AI settings
         function initializePlayers() {
-        let player1Name = player1Input.value || 'Player 1';
-        let player2Name = player2Input.value || 'Player 2';
+            let player1Name = player1Input.value || 'Player 1';
+            let player2Name = player2Input.value || 'Player 2';
 
-    // Enforce rule: only one player can be named "AI"
-    if (player1Name.toLowerCase() === 'ai' && player2Name.toLowerCase() === 'ai') {
-        alert('Only one player can be named "AI". Please change one of the names.');
-        player1Name = 'Player 1';
-        player2Name = 'Player 2';
-        player1Input.value = player1Name;
-        player2Input.value = player2Name;
-    }
+            // Enforce rule: only one player can be named "AI"
+            if (player1Name.toLowerCase() === 'ai' && player2Name.toLowerCase() === 'ai') {
+                alert('Only one player can be named "AI". Please change one of the names.');
+                player1Name = 'Player 1';
+                player2Name = 'Player 2';
+                player1Input.value = player1Name;
+                player2Input.value = player2Name;
+            }
 
-    isPlayer1Computer = player1Name.toLowerCase() === 'ai';
-    isPlayer2Computer = player2Name.toLowerCase() === 'ai';
+            isPlayer1AI = isAI(player1Name);
+            isPlayer2AI = isAI(player2Name);
 
-    updateScore();
-}
+            updateScore();
+        }
 
         // Create board cells
         function createBoard() {
@@ -164,6 +212,11 @@
                 cell.dataset.index = i;
                 cell.addEventListener('click', handleCellClick);
                 board.appendChild(cell);
+            }
+
+            // If Player 1 is AI, make the first move
+            if (isPlayer1AI) {
+                setTimeout(computerMove, 500);
             }
         }
 
@@ -190,7 +243,7 @@
             }
 
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            if ((currentPlayer === 'X' && isPlayer1Computer) || (currentPlayer === 'O' && isPlayer2Computer)) {
+            if ((currentPlayer === 'X' && isPlayer1AI) || (currentPlayer === 'O' && isPlayer2AI)) {
                 setTimeout(computerMove, 500);
             }
         }
@@ -275,6 +328,43 @@
         restartButton.addEventListener('click', () => {
             initializePlayers();
             createBoard();
+        });
+
+        // Modal functionality
+        const playLink = document.getElementById('playLink');
+        const rulesLink = document.getElementById('rulesLink');
+        const aboutLink = document.getElementById('aboutLink');
+
+        const playModal = document.getElementById('playModal');
+        const rulesModal = document.getElementById('rulesModal');
+        const aboutModal = document.getElementById('aboutModal');
+
+        const closePlayModal = document.getElementById('closePlayModal');
+        const closeRulesModal = document.getElementById('closeRulesModal');
+        const closeAboutModal = document.getElementById('closeAboutModal');
+
+        playLink.addEventListener('click', () => {
+            playModal.style.display = 'flex';
+        });
+
+        rulesLink.addEventListener('click', () => {
+            rulesModal.style.display = 'flex';
+        });
+
+        aboutLink.addEventListener('click', () => {
+            aboutModal.style.display = 'flex';
+        });
+
+        closePlayModal.addEventListener('click', () => {
+            playModal.style.display = 'none';
+        });
+
+        closeRulesModal.addEventListener('click', () => {
+            rulesModal.style.display = 'none';
+        });
+
+        closeAboutModal.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
         });
 
         // Initialize the game
