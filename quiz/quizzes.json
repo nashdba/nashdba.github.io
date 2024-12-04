@@ -169,7 +169,6 @@
     { "question": "What part of the human body is responsible for the sense of smell?", "answer": "Nose" },
     { "question": "What is the largest artery in the human body?", "answer": "Aorta" },
     { "question": "What is the name of the hormone that regulates blood sugar?", "answer": "Insulin" },
-    { "question": "Where are human sperm cells produced?", "answer": "Testes" },
     { "question": "Which part of the brain is responsible for memory?", "answer": "Hippocampus" },
     { "question": "What is the name of the structure in the eye that focuses light?", "answer": "Lens" },
     { "question": "What is the term for the voice box?", "answer": "Larynx" },
@@ -358,7 +357,6 @@
     { "question": "What 'Q' is a type of bird with a colorful tail?", "answer": "Quail" },
     { "question": "What 'R' is a type of animal with large, floppy ears?", "answer": "Rabbit" },
     { "question": "What 'T' is a fruit that is a favorite for making ketchup?", "answer": "Tomato" },
-    { "question": "What 'U' is an insect known for its sting?", "answer": "Urticaria (scientific name for stinging nettle, though this one is tricky!)" },
     { "question": "What 'F' is a type of tree that has needles instead of leaves?", "answer": "Fir" },
     { "question": "What 'S' is a farm animal that produces wool?", "answer": "Sheep" },
     { "question": "What 'Z' is an animal that looks like a donkey and lives in Africa?", "answer": "Zebra" },
@@ -874,6 +872,8 @@
 	{
     "name": "Star Wars",
     "questions": [
+	{ "question": "What is Lukes callsign in the attack on the DeathStar?", "answer": "Red 5" },
+        { "question": "What class of space fighter does Luke Skywalker fly to attack the DeathStar?", "answer": "X-Wing" },
         { "question": "What is the name of Han Solo’s ship?", "answer": "Millennium Falcon" },
         { "question": "Who is Luke Skywalker’s father?", "answer": "Darth Vader" },
         { "question": "What planet is Princess Leia from?", "answer": "Alderaan" },
