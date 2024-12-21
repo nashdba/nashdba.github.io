@@ -107,6 +107,14 @@
             font-size: 16px;
             border-radius: 5px;
         }
+
+        .winning-square {
+             background-color: yellow;
+        }
+
+        .draw-square {
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -238,7 +246,9 @@
             cell.textContent = currentPlayer;
             cell.classList.add('taken');
 
-            if (checkWinner()) {
+            const winningCombo = checkWinner();
+            if (winningCombo) {
+                highlightWinningSquares(winningCombo);
                 winnerDisplay.textContent = `${currentPlayer} Wins!`;
                 scores[currentPlayer]++;
                 updateScore();
@@ -247,6 +257,7 @@
 
             if (boardState.every(Boolean)) {
                 winnerDisplay.textContent = "It's a draw!";
+                highlightDrawSquares();
                 return;
             }
 
@@ -286,17 +297,19 @@
 
             // Random move
             const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            boardState[randomIndex] = currentPlayer;
             markCell(randomIndex);
         }
 
         // Mark a cell for the AI
         function markCell(index) {
             const cell = board.querySelector(`.cell[data-index='${index}']`);
+            boardState[index] = currentPlayer;
             cell.textContent = currentPlayer;
             cell.classList.add('taken');
 
-            if (checkWinner()) {
+            const winningCombo = checkWinner();
+            if (winningCombo) {
+                highlightWinningSquares(winningCombo);
                 winnerDisplay.textContent = `${currentPlayer} Wins!`;
                 scores[currentPlayer]++;
                 updateScore();
@@ -305,6 +318,7 @@
 
             if (boardState.every(Boolean)) {
                 winnerDisplay.textContent = "It's a draw!";
+                highlightDrawSquares();
                 return;
             }
 
@@ -319,9 +333,26 @@
                 [0, 4, 8], [2, 4, 6],
             ];
 
-            return winningCombos.some(combo => {
+            for (let combo of winningCombos) {
                 const [a, b, c] = combo;
-                return boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c];
+                if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                    return combo;
+                }
+            }
+            return null;
+        }
+
+        function highlightWinningSquares(winningCombo) {
+            winningCombo.forEach(index => {
+                const cell = board.querySelector(`.cell[data-index='${index}']`);
+                cell.classList.add('winning-square');
+            });
+        }
+
+        function highlightDrawSquares() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.classList.add('draw-square');
             });
         }
 
