@@ -1,0 +1,64 @@
+body {
+  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+  background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  background: #a5d6a7;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.countdown-timer span {
+  display: inline-block;
+  margin: 10px;
+  font-size: 2em;
+  background: #fff9c4;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 2px solid #8bc34a;
+}
+
+main {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.post {
+  background: #f1f8e9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+}
+
+#blog-controls {
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+#blog-controls a {
+  margin: 0 10px;
+  color: #33691e;
+  text-decoration: none;
+}
+
+#blog-controls select {
+  font-size: 1rem;
+  margin-left: 5px;
+}
+
+.blog-image {
+  display: block;
+  max-width: 250px;
+  height: auto;
+  margin: 10px auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
