@@ -62,3 +62,14 @@ main {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+#world-clock {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  background-color: #f1f8e9;
+  border-left: 6px solid #8bc34a;
+  padding: 10px 15px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+
