@@ -55,12 +55,23 @@ main {
 
 .blog-image {
   display: block;
-  max-width: 100%;
+  max-width: 90%;
   height: auto;
   margin: 10px auto;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   object-fit: contain;
+}
+
+old.blog-image {
+  display: block;
+  max-width: 500px;       /* Limits the image width was 100% */
+  max-height: 300px;      /* Limits the image height not set */
+  height: auto;
+  margin: 10px auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  object-fit: contain;    /* Ensures image fits within box without being cropped */
 }
 
 .blog-table-center {
@@ -74,7 +85,7 @@ main {
   text-align: center;
   vertical-align: middle;
   overflow: hidden;
-  padding: 10px; /* optional spacing */
+  padding: 5px; /* optional spacing */
 }
 
 #world-clock {
